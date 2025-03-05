@@ -22,6 +22,7 @@ import {
 } from '@mui/material';
 import { useAuth } from '../utils/AuthContext';
 import { getUserAppointments, cancelAppointment } from '../api/bookings';
+import ServiceInfoTooltip from './ServiceInfoTooltip';
 
 const formatDate = (dateString) => {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -201,7 +202,11 @@ const Bookings = () => {
               <TableBody>
                 {bookings.map((booking) => (
                   <TableRow key={booking.id}>
-                    <TableCell>{booking.service_title}</TableCell>
+                    <TableCell>
+                      <ServiceInfoTooltip serviceTitle={booking.service_title}>
+                        {booking.service_title}
+                      </ServiceInfoTooltip>
+                    </TableCell>
                     <TableCell>{formatDate(booking.appointment_date)}</TableCell>
                     <TableCell>{booking.appointment_time}</TableCell>
                     <TableCell>

@@ -25,6 +25,9 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static(join(__dirname, 'dist')));
 
+// Serve markdown files from the documents directory
+app.use('/src/assets/images/documents', express.static(join(__dirname, 'src/assets/images/documents')));
+
 // Initialize database
 const initDb = () => {
   db.exec(`
