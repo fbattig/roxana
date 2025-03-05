@@ -430,19 +430,25 @@ const Services = () => {
                   >
                     <Box 
                       sx={{ 
-                        height: 200, 
+                        height: 300, 
                         overflow: 'hidden',
                         position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         '& img': {
                           width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
+                          height: 'auto',
+                          maxHeight: '100%',
+                          objectFit: 'contain',
                           transition: 'transform 0.3s ease-in-out'
                         },
                         '&:hover img': {
                           transform: 'scale(1.05)'
                         },
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        backgroundColor: 'rgba(245, 245, 245, 0.5)',
+                        padding: 2
                       }}
                       onMouseEnter={() => setHoveredImage(service.image)}
                       onMouseLeave={() => setHoveredImage(null)}
