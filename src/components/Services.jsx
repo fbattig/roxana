@@ -21,7 +21,7 @@ const mainServices = [
     title: 'Tax Slips Preparation and Filing',
     description: 'Professional preparation and filing of your tax slips to ensure compliance and maximize returns.',
     icon: <CalculateIcon sx={{ fontSize: 48 }} />,
-    image: '/images/services/tax.webp',
+    image: '/images/services/T4 form.png',
     time: '3 hrs',
     price: '$465',
     delay: 0,

@@ -10,20 +10,20 @@ const Hero = () => {
   
   const images = [
     {
-      url: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=2000",
-      alt: "Professional accountant working on financial reports"
+      url: "https://images.unsplash.com/photo-1556740758-90de374c12ad?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=2000",
+      alt: "Professional woman reviewing tax documents in modern office"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=2000",
+      alt: "Professional woman explaining tax documents to client"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1565945887714-d5139f4eb0ce?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=2000",
+      alt: "Female tax expert analyzing financial documents during tax season"
     },
     {
       url: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=2000",
-      alt: "Modern office with financial charts"
-    },
-    {
-      url: "https://images.unsplash.com/photo-1554224154-26032ffc0d07?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=2000",
-      alt: "Business analytics and growth"
-    },
-    {
-      url: "https://images.unsplash.com/photo-1591696205602-2f950c417cb9?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=2000",
-      alt: "Tax planning and consultation"
+      alt: "Professional tax office with tax forms and computer"
     }
   ];
 
@@ -82,7 +82,7 @@ const Hero = () => {
 
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
         <Grid container spacing={4} alignItems="center">
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={6} sx={{ textAlign: 'center' }}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -92,10 +92,11 @@ const Hero = () => {
                 component="h1"
                 sx={{
                   fontSize: { xs: '2.5rem', md: '3.5rem' },
-                  fontWeight: 700,
+                  fontWeight: 600,
                   color: 'primary.main',
                   lineHeight: 1.2,
-                  mb: 1
+                  mb: 1,
+                  textAlign: 'center'
                 }}
               >
                 Tax Season is All Year Long
@@ -104,14 +105,15 @@ const Hero = () => {
               <Typography
                 component="h2"
                 sx={{
-                  fontSize: { xs: '1.8rem', md: '2.2rem' },
-                  fontWeight: 600,
+                  fontSize: { xs: '1.5rem', md: '1.8rem' },
+                  fontWeight: 400,
                   color: 'primary.main',
-                  lineHeight: 1.2,
-                  mb: 2
+                  lineHeight: 1.4,
+                  mb: 2,
+                  textAlign: 'center'
                 }}
               >
-                Providing Solutions For All Your Tax Matters
+                Providing <span style={{ fontWeight: 600 }}>Solutions</span> For All Your <span style={{ fontWeight: 600 }}>Tax</span> Matters
               </Typography>
 
               <Typography
@@ -121,13 +123,15 @@ const Hero = () => {
                   mb: 4,
                   fontSize: { xs: '1.1rem', md: '1.25rem' },
                   lineHeight: 1.6,
-                  maxWidth: '90%'
+                  maxWidth: '100%',
+                  textAlign: 'center',
+                  margin: '0 auto'
                 }}
               >
                 Professional tax, accounting, and business advisory services tailored to your needs. Let us handle the numbers while you focus on growth.
               </Typography>
 
-              <Stack direction="row" spacing={2}>
+              <Stack direction="row" spacing={2} justifyContent="center">
                 <Button
                   variant="contained"
                   size="large"
