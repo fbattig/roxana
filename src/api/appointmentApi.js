@@ -1,3 +1,6 @@
+// API URL for server communication
+const API_URL = 'http://localhost:3001/api';
+
 // Storage key for appointments
 const STORAGE_KEY = 'rr_tax_appointments';
 
@@ -91,58 +94,63 @@ const saveAppointments = (appointments) => {
 // Create a new appointment
 export const createAppointment = async (appointmentData) => {
   try {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+    console.log('Creating appointment with data:', appointmentData);
     
-    const appointments = getAllAppointments();
+    const response = await fetch(`${API_URL}/appointments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(appointmentData)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Server returned error:', errorData);
+      throw new Error(errorData.message || 'Failed to book appointment');
+    }
     
-    // Create appointment object with ID
-    const newAppointment = {
-      id: Date.now(),
-      ...appointmentData,
-      status: 'pending',
-      createdAt: new Date().toISOString()
-    };
-    
-    // Add to appointments list
-    appointments.push(newAppointment);
-    
-    // Save to localStorage
-    saveAppointments(appointments);
-    
-    return {
-      success: true,
-      id: newAppointment.id,
-      message: 'Appointment booked successfully!'
-    };
+    const data = await response.json();
+    console.log('Appointment created successfully:', data);
+    return data;
   } catch (error) {
     console.error('Error booking appointment:', error);
-    return { 
-      success: false, 
-      message: 'Failed to book appointment. Please try again.' 
-    };
+    throw error;
   }
 };
 
 // Get available time slots for a date
 export const getAvailableTimeSlots = async (date) => {
   try {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 300));
+    console.log('Fetching available slots for date:', date);
     
-    // Get booked slots for the date
-    const appointments = getAllAppointments();
-    const bookedSlots = appointments
-      .filter(app => app.appointmentDate === date)
-      .map(app => app.appointmentTime);
+    const response = await fetch(`${API_URL}/appointments/available-slots?date=${date}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Server returned error for available slots:', errorData);
+      throw new Error(errorData.message || 'Failed to get available time slots');
+    }
     
-    // Return all time slots with availability status
-    return ALL_TIME_SLOTS.map(slot => ({
-      time: slot,
-      available: !bookedSlots.includes(slot)
-    }));
+    const data = await response.json();
+    console.log('Available slots retrieved:', data);
+    
+    if (data.success && data.availableSlots) {
+      return ALL_TIME_SLOTS.map(slot => ({
+        time: slot,
+        available: data.availableSlots.includes(slot)
+      }));
+    } else {
+      throw new Error('Invalid response format from server');
+    }
   } catch (error) {
     console.error('Error getting available time slots:', error);
+    // Fallback to all slots available in case of error
     return ALL_TIME_SLOTS.map(slot => ({
       time: slot,
       available: true
@@ -151,10 +159,22 @@ export const getAvailableTimeSlots = async (date) => {
 };
 
 // Get appointments for a date
-export const getAppointmentsByDate = (date) => {
+export const getAppointmentsByDate = async (date) => {
   try {
-    const appointments = getAllAppointments();
-    return appointments.filter(app => app.appointmentDate === date);
+    const response = await fetch(`${API_URL}/appointments?date=${date}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to get appointments');
+    }
+    
+    const data = await response.json();
+    return data.appointments || [];
   } catch (error) {
     console.error('Error getting appointments:', error);
     return [];

@@ -49,7 +49,8 @@ const initDb = () => {
       last_name TEXT NOT NULL,
       email TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL,
-      phone TEXT
+      phone TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
   
@@ -301,6 +302,132 @@ app.get('/api/appointments/available-slots', (req, res) => {
     res.status(500).json({ 
       success: false, 
       message: 'Failed to get available time slots' 
+    });
+  }
+});
+
+// Get user appointments
+app.get('/api/users/:userId/appointments', (req, res) => {
+  console.log('User appointments endpoint hit for userId:', req.params.userId);
+  try {
+    const { userId } = req.params;
+    
+    if (!userId) {
+      console.log('Missing userId for user appointments');
+      return res.status(400).json({ 
+        success: false, 
+        message: 'User ID is required' 
+      });
+    }
+    
+    // Find the user to verify they exist
+    const userStmt = db.prepare('SELECT id FROM users WHERE id = ?');
+    const user = userStmt.get(userId);
+    
+    if (!user) {
+      console.log('User not found with id:', userId);
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+    
+    // Get the user's appointments
+    const stmt = db.prepare(`
+      SELECT 
+        a.id,
+        a.service_id,
+        a.service_title,
+        a.client_name,
+        a.client_email,
+        a.client_phone,
+        a.appointment_date,
+        a.appointment_time,
+        a.status,
+        a.created_at
+      FROM appointments a
+      WHERE a.client_email = (SELECT email FROM users WHERE id = ?)
+      ORDER BY a.appointment_date DESC, a.appointment_time ASC
+    `);
+    
+    const appointments = stmt.all(userId);
+    
+    console.log(`Found ${appointments.length} appointments for user ${userId}`);
+    
+    res.json({
+      success: true,
+      appointments
+    });
+  } catch (error) {
+    console.error('Error fetching user appointments:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch appointments. Please try again.'
+    });
+  }
+});
+
+// Cancel an appointment
+app.put('/api/appointments/:appointmentId/cancel', (req, res) => {
+  console.log('Cancel appointment endpoint hit for appointmentId:', req.params.appointmentId);
+  try {
+    const { appointmentId } = req.params;
+    const { userId } = req.body;
+    
+    if (!appointmentId) {
+      console.log('Missing appointmentId for cancellation');
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Appointment ID is required' 
+      });
+    }
+    
+    // Find the appointment
+    const findStmt = db.prepare(`
+      SELECT a.*, u.id as user_id
+      FROM appointments a
+      JOIN users u ON a.client_email = u.email
+      WHERE a.id = ?
+    `);
+    
+    const appointment = findStmt.get(appointmentId);
+    
+    if (!appointment) {
+      console.log('Appointment not found with id:', appointmentId);
+      return res.status(404).json({
+        success: false,
+        message: 'Appointment not found'
+      });
+    }
+    
+    // Verify the appointment belongs to the user
+    if (userId && appointment.user_id != userId) {
+      console.log('Unauthorized cancellation attempt. User:', userId, 'Appointment owner:', appointment.user_id);
+      return res.status(403).json({
+        success: false,
+        message: 'You are not authorized to cancel this appointment'
+      });
+    }
+    
+    // Update the appointment status to 'cancelled'
+    const updateStmt = db.prepare(`
+      UPDATE appointments
+      SET status = 'cancelled'
+      WHERE id = ?
+    `);
+    
+    updateStmt.run(appointmentId);
+    
+    console.log('Appointment cancelled successfully:', appointmentId);
+    res.json({
+      success: true,
+      message: 'Appointment cancelled successfully'
+    });
+  } catch (error) {
+    console.error('Error cancelling appointment:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to cancel appointment. Please try again.'
     });
   }
 });
