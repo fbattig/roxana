@@ -86,18 +86,6 @@ const Navbar = () => {
                 {item.label}
               </Button>
             ))}
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => scrollToSection('consultation')}
-              sx={{ 
-                ml: 2,
-                borderRadius: 2,
-                px: 2
-              }}
-            >
-              Schedule
-            </Button>
             {currentUser && (
               <Button
                 component={Link}
@@ -201,24 +189,9 @@ const Navbar = () => {
               }}
             />
           </ListItem>
-          <ListItem sx={{ mt: 2, justifyContent: 'center' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => scrollToSection('consultation')}
-              sx={{ 
-                borderRadius: 2,
-                px: 3,
-                py: 1,
-                width: '80%'
-              }}
-            >
-              Schedule
-            </Button>
-          </ListItem>
         </List>
       </Drawer>
-      <Toolbar /> {/* Spacer */}
+      <Toolbar /> {/* This empty Toolbar is for spacing */}
     </Box>
   );
 };
