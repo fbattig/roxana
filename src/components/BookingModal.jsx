@@ -10,12 +10,16 @@ import {
   Grid, 
   CircularProgress,
   Snackbar,
-  Alert
+  Alert,
+  Typography,
+  Link
 } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, DateCalendar } from '@mui/x-date-pickers';
 import { format, addDays, isWeekend } from 'date-fns';
 import { getAvailableTimeSlots, createAppointment } from '../api/appointmentApi';
+import { useAuth } from '../utils/AuthContext';
+import { Link as RouterLink } from 'react-router-dom';
 
 const BookingModal = ({ open, onClose, service }) => {
   const [step, setStep] = useState(1);
@@ -34,6 +38,20 @@ const BookingModal = ({ open, onClose, service }) => {
     message: '',
     severity: 'success'
   });
+  
+  // Get current user from auth context
+  const { currentUser } = useAuth();
+
+  // Prefill form data with user information if logged in
+  useEffect(() => {
+    if (currentUser) {
+      setFormData({
+        name: `${currentUser.first_name} ${currentUser.last_name}`,
+        email: currentUser.email,
+        phone: currentUser.phone || ''
+      });
+    }
+  }, [currentUser]);
 
   // Disable weekends
   const shouldDisableDate = (date) => {
@@ -164,9 +182,9 @@ const BookingModal = ({ open, onClose, service }) => {
     setSelectedDate(null);
     setSelectedTime(null);
     setFormData({
-      name: '',
-      email: '',
-      phone: ''
+      name: currentUser ? `${currentUser.first_name} ${currentUser.last_name}` : '',
+      email: currentUser ? currentUser.email : '',
+      phone: currentUser ? (currentUser.phone || '') : ''
     });
     setErrors({});
     onClose();
@@ -179,6 +197,66 @@ const BookingModal = ({ open, onClose, service }) => {
       open: false
     });
   };
+
+  // If user is not logged in, show login/register message
+  if (!currentUser) {
+    return (
+      <Dialog 
+        open={open} 
+        onClose={onClose}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: '8px',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)'
+          }
+        }}
+      >
+        <DialogTitle sx={{ borderBottom: '1px solid #eee', pb: 2, pt: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Box component="h5" variant="h5" fontWeight="bold" sx={{ fontSize: '24px', mb: 1 }}>
+                Account Required
+              </Box>
+            </Box>
+          </Box>
+        </DialogTitle>
+        
+        <DialogContent sx={{ py: 4 }}>
+          <Box sx={{ textAlign: 'center', py: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Please create an account or log in to book an appointment
+            </Typography>
+            <Typography variant="body1" color="text.secondary" paragraph>
+              To book an appointment for {service?.title}, you need to create an account or log in to your existing account.
+            </Typography>
+            <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Button 
+                component={RouterLink} 
+                to="/account" 
+                variant="contained" 
+                color="primary" 
+                size="large"
+                fullWidth
+              >
+                Create Account / Sign In
+              </Button>
+              <Button 
+                onClick={onClose} 
+                variant="outlined" 
+                color="primary"
+                size="large"
+                fullWidth
+              >
+                Cancel
+              </Button>
+            </Box>
+          </Box>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <>
@@ -403,26 +481,21 @@ const BookingModal = ({ open, onClose, service }) => {
               </Grid>
               
               <Grid item xs={12}>
-                <Box sx={{ p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Box component="h6" variant="h6" gutterBottom>
-                      Appointment Summary
-                    </Box>
-                    <Box component="p" variant="body2">
-                      <strong>Service:</strong> {service?.title}
-                    </Box>
-                    <Box component="p" variant="body2">
-                      <strong>Date:</strong> {selectedDate ? format(selectedDate, 'MMMM d, yyyy') : ''}
-                    </Box>
-                    <Box component="p" variant="body2">
-                      <strong>Time:</strong> {selectedTime}
-                    </Box>
-                    <Box component="p" variant="body2">
-                      <strong>Duration:</strong> {service?.time}
-                    </Box>
-                    <Box component="p" variant="body2">
-                      <strong>Price:</strong> {service?.price}
-                    </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                  <Box component="h6" variant="h6" gutterBottom sx={{ mt: 2 }}>
+                    Appointment Details
+                  </Box>
+                  <Box component="p" variant="body1" sx={{ mb: 1 }}>
+                    <strong>Service:</strong> {service?.title}
+                  </Box>
+                  <Box component="p" variant="body1" sx={{ mb: 1 }}>
+                    <strong>Date:</strong> {selectedDate ? format(selectedDate, 'EEEE, MMMM d, yyyy') : ''}
+                  </Box>
+                  <Box component="p" variant="body1" sx={{ mb: 1 }}>
+                    <strong>Time:</strong> {selectedTime}
+                  </Box>
+                  <Box component="p" variant="body1" sx={{ mb: 1 }}>
+                    <strong>Price:</strong> {service?.price}
                   </Box>
                 </Box>
               </Grid>
@@ -433,34 +506,36 @@ const BookingModal = ({ open, onClose, service }) => {
         <DialogActions sx={{ px: 3, py: 2, borderTop: '1px solid #eee' }}>
           {step === 1 ? (
             <>
-              <Button onClick={handleCloseModal}>
+              <Button onClick={handleCloseModal} color="inherit">
                 Cancel
               </Button>
               <Button 
+                onClick={handleNext} 
                 variant="contained" 
-                color="primary" 
-                onClick={handleNext}
-                disabled={!selectedDate || !selectedTime || loading}
+                color="primary"
+                disabled={!selectedDate || !selectedTime}
               >
                 Next
               </Button>
             </>
           ) : step === 2 ? (
             <>
-              <Button onClick={handleBack} disabled={loading}>
+              <Button onClick={handleBack} color="inherit">
                 Back
               </Button>
               <Button 
+                onClick={handleNext} 
                 variant="contained" 
-                color="primary" 
-                onClick={handleNext}
+                color="primary"
                 disabled={loading}
               >
-                {loading ? <CircularProgress size={24} /> : 'Book Appointment'}
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Book Appointment'}
               </Button>
             </>
           ) : (
-            <></>
+            <Button onClick={handleCloseModal} color="primary">
+              Close
+            </Button>
           )}
         </DialogActions>
       </Dialog>
