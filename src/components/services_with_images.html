@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RR Tax & Accounting - Services</title>
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #f8f8f8;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #59798E;
+            color: white;
+            border-radius: 8px;
+        }
+        h1 {
+            margin: 0;
+        }
+        .services-nav {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+        }
+        .services-nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .services-nav li {
+            margin-bottom: 10px;
+        }
+        .services-nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 4px;
+            background-color: #eee;
+            display: inline-block;
+        }
+        .services-nav a.active {
+            background-color: #59798E;
+            color: white;
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .service-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: white;
+            transition: transform 0.3s ease;
+        }
+        .service-item:hover {
+            transform: translateY(-5px);
+        }
+        .service-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        .service-content {
+            padding: 20px;
+        }
+        .service-title {
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #59798E;
+        }
+        .service-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .service-time, .service-price {
+            font-weight: bold;
+        }
+        .book-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #59798E;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 15px;
+            text-decoration: none;
+        }
+        .book-button:hover {
+            background-color: #486a7e;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>RR Tax & Accounting Services</h1>
+    </header>
+    
+    <div class="services-nav">
+        <ul>
+            <li><a href="#" class="active">All Services</a></li>
+            <li><a href="#">Consultations</a></li>
+            <li><a href="#">Personal</a></li>
+            <li><a href="#">Corporate</a></li>
+            <li><a href="#">Business</a></li>
+        </ul>
+    </div>
+    
+    <div class="services-grid">
+        <!-- Tax Slips Service -->
+        <div class="service-item">
+            <img src="../Roxana/public/images/services/tax.webp" alt="Tax Slips Preparation and Filing">
+            <div class="service-content">
+                <h3 class="service-title">Tax Slips Preparation and Filing</h3>
+                <p>Professional preparation and filing of your tax slips to ensure compliance and maximize returns.</p>
+                <div class="service-details">
+                    <span class="service-time">3 hrs</span>
+                    <span class="service-price">$465</span>
+                </div>
+                <a href="#" class="book-button">BOOK</a>
+            </div>
+        </div>
+        
+        <!-- Federal Corporation Service -->
+        <div class="service-item">
+            <img src="../Roxana/public/images/services/federal.webp" alt="Federal Corporation New Registration">
+            <div class="service-content">
+                <h3 class="service-title">Federal Corporation New Registration</h3>
+                <p>Complete registration service for new federal corporations, ensuring all legal requirements are met.</p>
+                <div class="service-details">
+                    <span class="service-time">10 hrs 50 mins</span>
+                    <span class="service-price">$1,150</span>
+                </div>
+                <a href="#" class="book-button">BOOK</a>
+            </div>
+        </div>
+        
+        <!-- Business Income Service -->
+        <div class="service-item">
+            <img src="../Roxana/public/images/services/startup.webp" alt="Business Income Sole Proprietorship or Partnership">
+            <div class="service-content">
+                <h3 class="service-title">Business Income Sole Proprietorship or Partnership</h3>
+                <p>Comprehensive income tax preparation for sole proprietorships and partnerships.</p>
+                <div class="service-details">
+                    <span class="service-time">5 hrs</span>
+                    <span class="service-price">$550</span>
+                </div>
+                <a href="#" class="book-button">BOOK</a>
+            </div>
+        </div>
+        
+        <!-- Bookkeeping Service -->
+        <div class="service-item">
+            <img src="../Roxana/public/images/services/bookkeeping.webp" alt="Bookkeeping Services">
+            <div class="service-content">
+                <h3 class="service-title">Bookkeeping Services</h3>
+                <p>Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.</p>
+                <div class="service-details">
+                    <span class="service-time">4 hrs</span>
+                    <span class="service-price">$400</span>
+                </div>
+                <a href="#" class="book-button">BOOK</a>
+            </div>
+        </div>
+        
+        <!-- Payroll Service -->
+        <div class="service-item">
+            <img src="../Roxana/public/images/services/payroll.webp" alt="Payroll Services">
+            <div class="service-content">
+                <h3 class="service-title">Payroll Services</h3>
+                <p>Complete payroll management including reports, remittances, and tax payments to CRA.</p>
+                <div class="service-details">
+                    <span class="service-time">3 hrs</span>
+                    <span class="service-price">$350</span>
+                </div>
+                <a href="#" class="book-button">BOOK</a>
+            </div>
+        </div>
+        
+        <!-- Audit Service -->
+        <div class="service-item">
+            <img src="../Roxana/public/images/services/audit.webp" alt="Audit Assistance">
+            <div class="service-content">
+                <h3 class="service-title">Audit Assistance</h3>
+                <p>Professional support during tax audits to ensure compliance and minimize stress.</p>
+                <div class="service-details">
+                    <span class="service-time">8 hrs</span>
+                    <span class="service-price">$900</span>
+                </div>
+                <a href="#" class="book-button">BOOK</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
