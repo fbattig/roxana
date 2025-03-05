@@ -446,12 +446,12 @@ const Services = () => {
                         '&:hover img': {
                           transform: 'scale(1.05)'
                         },
-                        cursor: 'pointer',
+                        cursor: service.image === '/images/services/T4 form.png' ? 'pointer' : 'default',
                         backgroundColor: 'rgba(245, 245, 245, 0.5)',
                         padding: 2
                       }}
-                      onMouseEnter={() => setHoveredImage(service.image)}
-                      onMouseLeave={() => setHoveredImage(null)}
+                      onMouseEnter={() => service.image === '/images/services/T4 form.png' ? setHoveredImage(service.image) : null}
+                      onMouseLeave={() => service.image === '/images/services/T4 form.png' ? setHoveredImage(null) : null}
                     >
                       <img src={service.image} alt={service.title} />
                     </Box>

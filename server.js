@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import db from './src/utils/database.js';
 import { format } from 'date-fns';
+import crypto from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -11,8 +12,16 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// CORS configuration
+const corsOptions = {
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static(join(__dirname, 'dist')));
 
@@ -33,11 +42,36 @@ const initDb = () => {
     )
   `);
   
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      first_name TEXT NOT NULL,
+      last_name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      password TEXT NOT NULL,
+      phone TEXT
+    )
+  `);
+  
   console.log('Database initialized successfully');
+};
+
+// Helper function to hash passwords
+const hashPassword = (password) => {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+  return { salt, hash };
+};
+
+// Helper function to verify passwords
+const verifyPassword = (password, hash, salt) => {
+  const verifyHash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+  return hash === verifyHash;
 };
 
 // API Routes
 app.post('/api/appointments', (req, res) => {
+  console.log('Appointment endpoint hit with body:', JSON.stringify(req.body));
   try {
     const { 
       serviceId, 
@@ -49,8 +83,11 @@ app.post('/api/appointments', (req, res) => {
       appointmentTime 
     } = req.body;
 
+    console.log('Appointment request received:', { serviceId, serviceTitle, clientName, clientEmail, clientPhone, appointmentDate, appointmentTime });
+
     // Validate required fields
     if (!serviceId || !serviceTitle || !clientName || !clientEmail || !appointmentDate || !appointmentTime) {
+      console.log('Missing required fields for appointment');
       return res.status(400).json({ 
         success: false, 
         message: 'Missing required fields' 
@@ -79,6 +116,7 @@ app.post('/api/appointments', (req, res) => {
       appointmentTime
     );
 
+    console.log('Appointment booked successfully with ID:', result.lastInsertRowid);
     res.status(201).json({ 
       success: true, 
       id: result.lastInsertRowid,
@@ -93,11 +131,141 @@ app.post('/api/appointments', (req, res) => {
   }
 });
 
+// User registration endpoint
+app.post('/api/users/register', (req, res) => {
+  console.log('Registration endpoint hit with body:', JSON.stringify(req.body));
+  try {
+    const { firstName, lastName, email, password, phone } = req.body;
+
+    console.log('Registration request received:', { firstName, lastName, email, phone });
+
+    // Validate required fields
+    if (!firstName || !lastName || !email || !password) {
+      console.log('Missing required fields for registration');
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields'
+      });
+    }
+
+    // Check if user already exists
+    const checkUser = db.prepare('SELECT email FROM users WHERE email = ?');
+    const existingUser = checkUser.get(email);
+
+    if (existingUser) {
+      console.log('User already exists with email:', email);
+      return res.status(409).json({
+        success: false,
+        message: 'User with this email already exists'
+      });
+    }
+
+    // Hash the password
+    const { salt, hash } = hashPassword(password);
+    
+    // Store the password as salt:hash
+    const passwordStore = `${salt}:${hash}`;
+
+    // Insert the new user
+    const stmt = db.prepare(`
+      INSERT INTO users (
+        first_name,
+        last_name,
+        email,
+        password,
+        phone
+      ) VALUES (?, ?, ?, ?, ?)
+    `);
+
+    const result = stmt.run(
+      firstName,
+      lastName,
+      email,
+      passwordStore,
+      phone || ''
+    );
+
+    console.log('User registered successfully with ID:', result.lastInsertRowid);
+    res.status(201).json({
+      success: true,
+      id: result.lastInsertRowid,
+      message: 'Account created successfully!'
+    });
+  } catch (error) {
+    console.error('Error creating account:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create account. Please try again.'
+    });
+  }
+});
+
+// User login endpoint
+app.post('/api/users/login', (req, res) => {
+  console.log('Login endpoint hit with body:', JSON.stringify(req.body));
+  try {
+    const { email, password } = req.body;
+
+    console.log('Login request received:', { email });
+
+    // Validate required fields
+    if (!email || !password) {
+      console.log('Missing email or password for login');
+      return res.status(400).json({
+        success: false,
+        message: 'Email and password are required'
+      });
+    }
+
+    // Find the user
+    const stmt = db.prepare('SELECT * FROM users WHERE email = ?');
+    const user = stmt.get(email);
+
+    if (!user) {
+      console.log('User not found with email:', email);
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
+    }
+
+    // Verify the password
+    const [salt, storedHash] = user.password.split(':');
+    const isValid = verifyPassword(password, storedHash, salt);
+
+    if (!isValid) {
+      console.log('Invalid password for user:', email);
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
+    }
+
+    // Return user info (excluding password)
+    const { password: _, ...userInfo } = user;
+    
+    console.log('User logged in successfully:', email);
+    res.json({
+      success: true,
+      message: 'Login successful',
+      user: userInfo
+    });
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Login failed. Please try again.'
+    });
+  }
+});
+
 app.get('/api/appointments/available-slots', (req, res) => {
+  console.log('Available slots endpoint hit with query:', JSON.stringify(req.query));
   try {
     const { date } = req.query;
     
     if (!date) {
+      console.log('Missing date for available slots');
       return res.status(400).json({ 
         success: false, 
         message: 'Date is required' 
@@ -123,6 +291,7 @@ app.get('/api/appointments/available-slots', (req, res) => {
     // Filter out booked slots
     const availableSlots = allTimeSlots.filter(slot => !bookedSlots.includes(slot));
     
+    console.log('Available slots for date:', date, availableSlots);
     res.json({ 
       success: true, 
       availableSlots 
@@ -138,6 +307,7 @@ app.get('/api/appointments/available-slots', (req, res) => {
 
 // Catch-all route to serve the React app
 app.get('*', (req, res) => {
+  console.log('Catch-all route hit with path:', req.path);
   res.sendFile(join(__dirname, 'dist', 'index.html'));
 });
 
