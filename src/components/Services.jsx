@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Grid, Typography, Card, CardContent, Container, Button, useTheme, useMediaQuery } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Grid, Typography, Card, CardContent, Container, Button, useTheme, useMediaQuery, Modal, Fade } from '@mui/material';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import BookIcon from '@mui/icons-material/Book';
@@ -323,11 +323,14 @@ const features = [
 ];
 
 const Services = () => {
+  const [activeCategory, setActiveCategory] = useState('All Services');
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+  const [hoveredImage, setHoveredImage] = useState(null);
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [activeCategory, setActiveCategory] = React.useState('All Services');
-  const [bookingModalOpen, setBookingModalOpen] = React.useState(false);
-  const [selectedService, setSelectedService] = React.useState(null);
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
   // Filter services based on active category
   const filteredServices = React.useMemo(() => {
@@ -425,10 +428,11 @@ const Services = () => {
                       }
                     }}
                   >
-                    <Box
-                      sx={{
-                        aspectRatio: '16/9',
+                    <Box 
+                      sx={{ 
+                        height: 200, 
                         overflow: 'hidden',
+                        position: 'relative',
                         '& img': {
                           width: '100%',
                           height: '100%',
@@ -436,9 +440,12 @@ const Services = () => {
                           transition: 'transform 0.3s ease-in-out'
                         },
                         '&:hover img': {
-                          transform: 'scale(1.1)'
-                        }
+                          transform: 'scale(1.05)'
+                        },
+                        cursor: 'pointer'
                       }}
+                      onMouseEnter={() => setHoveredImage(service.image)}
+                      onMouseLeave={() => setHoveredImage(null)}
                     >
                       <img src={service.image} alt={service.title} />
                     </Box>
@@ -614,6 +621,61 @@ const Services = () => {
           </Grid>
         </Container>
       </Box>
+
+      {/* Image Preview Modal */}
+      <Modal
+        open={hoveredImage !== null}
+        onClose={() => setHoveredImage(null)}
+        closeAfterTransition
+        disableAutoFocus
+        disableEnforceFocus
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          pointerEvents: 'none'
+        }}
+      >
+        <Fade in={hoveredImage !== null}>
+          <Box
+            sx={{
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              padding: 4,
+              maxWidth: '95vw',
+              maxHeight: '95vh',
+              outline: 'none',
+              borderRadius: 2,
+              position: 'relative',
+              pointerEvents: 'auto'
+            }}
+          >
+            <img
+              src={hoveredImage}
+              alt="Enlarged view"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '85vh',
+                objectFit: 'contain',
+                display: 'block',
+                margin: '0 auto',
+                transform: 'scale(1.5)',
+                transformOrigin: 'center center'
+              }}
+            />
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'white', 
+                textAlign: 'center', 
+                mt: 1,
+                opacity: 0.8
+              }}
+            >
+              Move mouse away to close
+            </Typography>
+          </Box>
+        </Fade>
+      </Modal>
 
       {/* Booking Modal */}
       <BookingModal 
