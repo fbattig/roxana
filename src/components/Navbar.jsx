@@ -13,6 +13,8 @@ import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import Chip from '@mui/material/Chip';
+import Avatar from '@mui/material/Avatar';
 import { useAuth } from '../utils/AuthContext';
 
 const Navbar = () => {
@@ -42,6 +44,23 @@ const Navbar = () => {
       }
     }
     setMobileOpen(false);
+  };
+
+  // Get user's first name or full name
+  const getUserDisplayName = () => {
+    if (!currentUser) return '';
+    
+    return `${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim() || 'User';
+  };
+
+  // Get user's initials for avatar
+  const getUserInitials = () => {
+    if (!currentUser) return '';
+    
+    const firstName = currentUser.first_name || '';
+    const lastName = currentUser.last_name || '';
+    
+    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
   };
 
   const menuItems = [
@@ -102,20 +121,45 @@ const Navbar = () => {
                 My Bookings
               </Button>
             )}
-            <Button
-              component={Link}
-              to="/account"
-              startIcon={<AccountCircleIcon />}
-              sx={{ 
-                ml: 2,
-                color: 'text.primary',
-                '&:hover': {
-                  color: 'primary.main'
-                }
-              }}
-            >
-              {currentUser ? 'My Account' : 'Sign In'}
-            </Button>
+            {currentUser ? (
+              <Chip
+                avatar={<Avatar>{getUserInitials()}</Avatar>}
+                label={getUserDisplayName()}
+                component={Link}
+                to="/account"
+                clickable
+                color="primary"
+                variant="outlined"
+                sx={{ 
+                  ml: 2,
+                  '&:hover': {
+                    backgroundColor: 'primary.light',
+                    color: 'white'
+                  },
+                  maxWidth: { xs: '150px', sm: '200px', md: '250px' },
+                  '& .MuiChip-label': {
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }
+                }}
+              />
+            ) : (
+              <Button
+                component={Link}
+                to="/account"
+                startIcon={<AccountCircleIcon />}
+                sx={{ 
+                  ml: 2,
+                  color: 'text.primary',
+                  '&:hover': {
+                    color: 'primary.main'
+                  }
+                }}
+              >
+                Sign In
+              </Button>
+            )}
           </Box>
           <IconButton
             color="inherit"
@@ -138,6 +182,25 @@ const Navbar = () => {
         }}
       >
         <List sx={{ mt: 8 }}>
+          {currentUser && (
+            <ListItem sx={{ mb: 2, justifyContent: 'center' }}>
+              <Chip
+                avatar={<Avatar>{getUserInitials()}</Avatar>}
+                label={`Welcome, ${getUserDisplayName()}`}
+                color="primary"
+                sx={{ 
+                  fontSize: '0.9rem',
+                  py: 0.5,
+                  maxWidth: '200px',
+                  '& .MuiChip-label': {
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }
+                }}
+              />
+            </ListItem>
+          )}
           {menuItems.map((item) => (
             <ListItem 
               button 
