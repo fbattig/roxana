@@ -16,6 +16,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import { motion } from 'framer-motion';
 import BookingModal from './BookingModal';
+import ReactMarkdown from 'react-markdown';
 
 // Import all images from RoxanaSupplied folder
 import taxSlipsImage from '../assets/images/RoxanaSupplied/Tax Slips Preparation and Filing.webp';
@@ -503,10 +504,23 @@ const Services = () => {
   const [imagePopup, setImagePopup] = useState({ open: false, image: null, title: null, isSpecialService: false });
   const [requirementsModalOpen, setRequirementsModalOpen] = useState(false);
   const [selectedRequirements, setSelectedRequirements] = useState(null);
+  const [markdownContent, setMarkdownContent] = useState('');
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+
+  // Function to fetch markdown content
+  const fetchMarkdownContent = async (filename) => {
+    try {
+      const response = await fetch(`${process.env.PUBLIC_URL}/assets/docs/${filename}`);
+      const markdownText = await response.text();
+      setMarkdownContent(markdownText);
+    } catch (error) {
+      console.error(`Failed to fetch markdown content for ${filename}:`, error);
+      setMarkdownContent('*Content could not be loaded. Please try again later.*');
+    }
+  };
 
   // Handle booking button click
   const handleBooking = (service) => {
@@ -528,16 +542,22 @@ const Services = () => {
 
   // Handle image popup open
   const handleImagePopupOpen = (service, event) => {
-    // Prevent the click from propagating to parent elements
     event.stopPropagation();
+    const isSpecialService = service.title === 'Tax Slips Preparation and Filing';
+    
     setImagePopup({ 
       open: true, 
       image: service.image, 
       title: service.title,
-      isSpecialService: service.title === 'Tax Slips Preparation and Filing' // Track if this is the special service
+      isSpecialService
     });
+    
+    // If it's the special service, fetch the markdown content
+    if (isSpecialService) {
+      fetchMarkdownContent('Tax Slips Preparation and Filing.md');
+    }
   };
-
+  
   // Handle image popup close
   const handleImagePopupClose = () => {
     setImagePopup({ open: false, image: null, title: null, isSpecialService: false });
@@ -929,65 +949,73 @@ const Services = () => {
           p: 2
         }}
       >
-        <Fade in={imagePopup.open} timeout={200}>
+        <Fade in={imagePopup.open}>
           <Box
             sx={{
-              position: 'relative',
-              bgcolor: 'background.paper',
+              backgroundColor: 'white',
               borderRadius: 2,
               boxShadow: 24,
-              p: 2,
-              maxWidth: imagePopup.isSpecialService ? '95vw' : '80vw',
-              maxHeight: imagePopup.isSpecialService ? '90vh' : '80vh',
-              overflow: 'hidden',
-              outline: 'none'
+              p: 4,
+              maxWidth: imagePopup.isSpecialService ? '800px' : '600px',
+              maxHeight: '90vh',
+              width: '100%',
+              overflow: 'auto',
+              position: 'relative'
             }}
           >
             <Typography variant="h6" component="h3" gutterBottom sx={{ mb: 2, textAlign: 'center' }}>
               {imagePopup.title}
             </Typography>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-                height: '100%',
-                maxHeight: imagePopup.isSpecialService ? 'calc(90vh - 80px)' : 'calc(80vh - 80px)',
-                overflow: 'hidden'
-              }}
-            >
-              <img
-                src={imagePopup.image}
-                alt={imagePopup.title}
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '100%',
-                  objectFit: 'contain',
-                  transform: imagePopup.isSpecialService ? 'scale(1.5)' : 'none'
+            {imagePopup.isSpecialService ? (
+              <Box sx={{ 
+                p: 2, 
+                backgroundColor: '#f9f9f9', 
+                borderRadius: 1,
+                border: '1px solid #eee',
+                maxHeight: 'calc(70vh - 100px)',
+                overflow: 'auto'
+              }}>
+                {markdownContent ? (
+                  <ReactMarkdown>{markdownContent}</ReactMarkdown>
+                ) : (
+                  <Typography align="center" color="text.secondary">Loading content...</Typography>
+                )}
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '100%',
+                  height: '100%',
+                  maxHeight: 'calc(80vh - 80px)',
+                  overflow: 'hidden'
                 }}
-                onError={(e) => {
-                  console.log(`Failed to load popup image`);
-                  e.target.src = DEFAULT_IMAGE;
-                }}
-              />
-            </Box>
+              >
+                <img
+                  src={imagePopup.image}
+                  alt={imagePopup.title}
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    objectFit: 'contain',
+                    transform: imagePopup.isSpecialService ? 'scale(1.5)' : 'none'
+                  }}
+                  onError={(e) => {
+                    console.log(`Failed to load popup image`);
+                    e.target.src = DEFAULT_IMAGE;
+                  }}
+                />
+              </Box>
+            )}
             <Button
               variant="contained"
               color="primary"
               onClick={handleImagePopupClose}
-              sx={{
-                position: 'absolute',
-                top: 10,
-                right: 10,
-                minWidth: 'auto',
-                width: 30,
-                height: 30,
-                p: 0,
-                borderRadius: '50%'
-              }}
+              sx={{ mt: 2, display: 'block', mx: 'auto' }}
             >
-              X
+              Close
             </Button>
           </Box>
         </Fade>
