@@ -14,9 +14,11 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import PrintIcon from '@mui/icons-material/Print';
 import { motion } from 'framer-motion';
 import BookingModal from './BookingModal';
 import ReactMarkdown from 'react-markdown';
+import Showdown from 'showdown';
 
 // Import all images from RoxanaSupplied folder
 import taxSlipsImage from '../assets/images/RoxanaSupplied/Tax Slips Preparation and Filing.webp';
@@ -418,7 +420,7 @@ const mainServices = [
     title: 'T1 Adjustment Consultation',
     description: 'Expert guidance on adjusting previously filed T1 tax returns to correct errors or claim missed deductions.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
-    image: '',
+    image: corporateTaxConsultationImage,
     time: '1 hrs',
     price: '$120',
     delay: 0.8,
@@ -579,6 +581,82 @@ const Services = () => {
       title: service.title,
       isSpecialService: true // Show markdown for all services
     });
+  };
+
+  // Handle print functionality
+  const handlePrint = () => {
+    const printWindow = window.open('', '_blank');
+    const converter = new Showdown.Converter();
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>${imagePopup.title} - Requirements</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              margin: 20px;
+              color: #333;
+            }
+            h1 {
+              color: #1976d2;
+              text-align: center;
+              margin-bottom: 20px;
+              border-bottom: 2px solid #1976d2;
+              padding-bottom: 10px;
+            }
+            h2 {
+              color: #1976d2;
+              margin-top: 20px;
+            }
+            ul, ol {
+              margin-bottom: 20px;
+            }
+            li {
+              margin-bottom: 8px;
+            }
+            p {
+              margin-bottom: 16px;
+            }
+            .footer {
+              margin-top: 30px;
+              text-align: center;
+              font-size: 12px;
+              color: #666;
+              border-top: 1px solid #ddd;
+              padding-top: 10px;
+            }
+            @media print {
+              body {
+                margin: 0.5in;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <h1>${imagePopup.title}</h1>
+          <div class="content">
+            ${markdownContent ? converter.makeHtml(markdownContent) : 'No content available'}
+          </div>
+          <div class="footer">
+            <p>Printed from Roxana Tax Services - ${new Date().toLocaleDateString()}</p>
+          </div>
+          <script>
+            window.onload = function() {
+              window.print();
+              setTimeout(function() {
+                window.close();
+              }, 500);
+            };
+          </script>
+        </body>
+      </html>
+    `;
+    
+    printWindow.document.open();
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
   };
 
   // Handle image popup open
@@ -1053,14 +1131,32 @@ const Services = () => {
                 />
               </Box>
             )}
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleImagePopupClose}
-              sx={{ mt: 2, display: 'block', mx: 'auto' }}
-            >
-              Close
-            </Button>
+            <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center', gap: 2 }}>
+              {imagePopup.isSpecialService && (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handlePrint}
+                  startIcon={<PrintIcon />}
+                  sx={{ 
+                    fontWeight: 'bold',
+                    backgroundColor: '#4caf50',
+                    '&:hover': {
+                      backgroundColor: '#388e3c',
+                    }
+                  }}
+                >
+                  Print
+                </Button>
+              )}
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleImagePopupClose}
+              >
+                Close
+              </Button>
+            </Box>
           </Box>
         </Fade>
       </Modal>
