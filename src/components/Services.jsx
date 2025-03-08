@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Grid, Typography, Card, CardContent, Container, Button, useTheme, useMediaQuery, Modal, Fade } from '@mui/material';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ReceiptIcon from '@mui/icons-material/Receipt';
@@ -367,6 +367,7 @@ const Services = () => {
   const [selectedService, setSelectedService] = useState(null);
   const [hoveredImage, setHoveredImage] = useState(null);
   const [imagePopup, setImagePopup] = useState({ open: false, image: null, title: null });
+  const popupTimeoutRef = React.useRef(null);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -397,15 +398,40 @@ const Services = () => {
     setActiveCategory(category);
   };
 
-  // Handle image popup open
+  // Handle image popup open with delay to prevent flickering
   const handleImagePopupOpen = (service) => {
-    setImagePopup({ open: true, image: service.image, title: service.title });
+    // Clear any existing timeout to prevent conflicts
+    if (popupTimeoutRef.current) {
+      clearTimeout(popupTimeoutRef.current);
+    }
+    
+    // Set a small delay before opening the popup to prevent flickering
+    popupTimeoutRef.current = setTimeout(() => {
+      setImagePopup({ open: true, image: service.image, title: service.title });
+    }, 100);
   };
 
-  // Handle image popup close
+  // Handle image popup close with delay to prevent flickering
   const handleImagePopupClose = () => {
-    setImagePopup({ open: false, image: null, title: null });
+    // Clear any existing timeout to prevent conflicts
+    if (popupTimeoutRef.current) {
+      clearTimeout(popupTimeoutRef.current);
+    }
+    
+    // Set a small delay before closing the popup to prevent flickering
+    popupTimeoutRef.current = setTimeout(() => {
+      setImagePopup({ open: false, image: null, title: null });
+    }, 300);
   };
+
+  // Clean up timeout on component unmount
+  React.useEffect(() => {
+    return () => {
+      if (popupTimeoutRef.current) {
+        clearTimeout(popupTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <Box
@@ -532,10 +558,10 @@ const Services = () => {
                       </Typography>
                       <Typography variant="body2" color="text.secondary" sx={{ 
                         mb: 2,
-                        height: 80,
+                        height: 110,
                         overflow: 'hidden',
                         display: '-webkit-box',
-                        WebkitLineClamp: 4,
+                        WebkitLineClamp: 6,
                         WebkitBoxOrient: 'vertical'
                       }}>
                         {service.description}
@@ -739,6 +765,17 @@ const Services = () => {
               zIndex: 9999,
               pointerEvents: 'auto'
             }}
+            onMouseEnter={() => {
+              // Clear any close timeout when mouse enters the popup
+              if (popupTimeoutRef.current) {
+                clearTimeout(popupTimeoutRef.current);
+              }
+              // Ensure popup stays open
+              if (!imagePopup.open) {
+                setImagePopup({ ...imagePopup, open: true });
+              }
+            }}
+            onMouseLeave={handleImagePopupClose}
           >
             <Typography variant="h6" component="h3" gutterBottom sx={{ mb: 2, textAlign: 'center' }}>
               {imagePopup.title}
