@@ -453,6 +453,7 @@ const Services = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: isMobile ? 0 : service.delay }}
                   viewport={{ once: true }}
+                  style={{ height: '100%' }}
                 >
                   <Card
                     sx={{
@@ -469,7 +470,7 @@ const Services = () => {
                   >
                     <Box 
                       sx={{ 
-                        height: 300, 
+                        height: 200, 
                         overflow: 'hidden',
                         position: 'relative',
                         display: 'flex',
@@ -477,9 +478,8 @@ const Services = () => {
                         justifyContent: 'center',
                         '& img': {
                           width: '100%',
-                          height: 'auto',
-                          maxHeight: '100%',
-                          objectFit: 'contain',
+                          height: '100%',
+                          objectFit: 'cover',
                           transition: 'transform 0.3s ease-in-out'
                         },
                         '&:hover img': {
@@ -501,18 +501,39 @@ const Services = () => {
                         }}
                       />
                     </Box>
-                    <CardContent sx={{ flexGrow: 1, p: 2 }}>
-                      <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600, mb: 1 }}>
+                    <CardContent sx={{ 
+                      flexGrow: 1, 
+                      p: 2, 
+                      display: 'flex', 
+                      flexDirection: 'column',
+                      height: 220
+                    }}>
+                      <Typography variant="h5" component="h2" gutterBottom sx={{ 
+                        fontWeight: 600, 
+                        mb: 1,
+                        height: 60,
+                        overflow: 'hidden',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical'
+                      }}>
                         {service.title}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary" sx={{ 
+                        mb: 2,
+                        height: 60,
+                        overflow: 'hidden',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical'
+                      }}>
                         {service.description}
                       </Typography>
                       <Box 
                         sx={{ 
                           display: 'flex', 
                           justifyContent: 'space-between', 
-                          mt: 2, 
+                          mt: 'auto', 
                           pt: 2, 
                           borderTop: '1px solid #eee' 
                         }}
