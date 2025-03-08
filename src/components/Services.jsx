@@ -79,6 +79,105 @@ const mainServices = [
   },
   {
     id: 4,
+    title: 'Consultation on Review Letters received from Canada Revenue',
+    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    icon: <BookIcon sx={{ fontSize: 48 }} />,
+    image: reviewLettersConsultationImage,
+    time: '4 hrs',
+    price: '$400',
+    delay: 0.6,
+    category: ['All Services', 'Business']
+  },
+  {
+    id: 5,
+    title: 'Commission Income Tax Filing',
+    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    icon: <BookIcon sx={{ fontSize: 48 }} />,
+    image: commissionIncomeImage,
+    time: '8 hrs',
+    price: '$580',
+    delay: 0.6,
+    category: ['All Services', 'Business']
+  },
+  {
+    id: 6,
+    title: 'Consultation - New Clients',
+    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    icon: <BookIcon sx={{ fontSize: 48 }} />,
+    image: newClientsConsultationImage,
+    time: '45 mins',
+    price: '$60',
+    delay: 0.6,
+    category: ['All Services', 'Business']
+  },
+  {
+    id: 7,
+    title: 'Corporate Tax Preparation and filing',
+    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    icon: <BookIcon sx={{ fontSize: 48 }} />,
+    image: corporateTaxPreparationImage,
+    time: '24 hrs',
+    price: '$2500',
+    delay: 0.6,
+    category: ['All Services', 'Business']
+  },
+  {
+    id: 8,
+    title: 'Corporate Tax Consultation',
+    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    icon: <BookIcon sx={{ fontSize: 48 }} />,
+    image: corporateTaxConsultationImage,
+    time: '1 hr',
+    price: '$80',
+    delay: 0.6,
+    category: ['All Services', 'Business']
+  },
+  {
+    id: 9,
+    title: 'Disability Credit Application',
+    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    icon: <BookIcon sx={{ fontSize: 48 }} />,
+    image: disabilityCreditImage,
+    time: '2 hrs',
+    price: '$250',
+    delay: 0.6,
+    category: ['All Services', 'Business']
+  },
+  {
+    id: 10,
+    title: 'Full Time Students Tax Filing',
+    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    icon: <BookIcon sx={{ fontSize: 48 }} />,
+    image: fullTimeStudentsImage,
+    time: '4 hrs',
+    price: '$65',
+    delay: 0.6,
+    category: ['All Services', 'Business']
+  },
+  {
+    id: 11,
+    title: 'HST Preparation and Filing',
+    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    icon: <BookIcon sx={{ fontSize: 48 }} />,
+    image: hstPreparationImage,
+    time: '8 hrs',
+    price: '$250',
+    delay: 0.6,
+    category: ['All Services', 'Business']
+  },
+  {
+    id: 12,
+    title: 'Professional Income Tax',
+    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    icon: <BookIcon sx={{ fontSize: 48 }} />,
+    image: professionalIncomeImage,
+    time: '24 hrs',
+    price: '$780',
+    delay: 0.6,
+    category: ['All Services', 'Business']
+  },
+  {
+    id:   13,
     title: 'Bookkeeping Services',
     description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
@@ -89,7 +188,7 @@ const mainServices = [
     category: ['All Services', 'Business']
   },
   {
-    id: 5,
+    id: 14,
     title: 'Payroll Services',
     description: 'Complete payroll management including reports, remittances, and tax payments to CRA.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
@@ -100,7 +199,7 @@ const mainServices = [
     category: ['All Services', 'Business']
   },
   {
-    id: 6,
+    id: 15,
     title: 'Auditing Services',
     description: 'Through analyzing procedures and documentation, we provide accurate and reliable financial decisions.',
     icon: <AccountBalanceIcon sx={{ fontSize: 48 }} />,
@@ -111,7 +210,7 @@ const mainServices = [
     category: ['All Services', 'Corporate', 'Consultations']
   },
   {
-    id: 7,
+    id: 16,
     title: 'Personal Tax Return',
     description: 'Complete preparation and filing of personal income tax returns for individuals.',
     icon: <CalculateIcon sx={{ fontSize: 48 }} />,
@@ -122,7 +221,7 @@ const mainServices = [
     category: ['All Services', 'Personal']
   },
   {
-    id: 8,
+    id:   17,
     title: 'Corporate Tax Return',
     description: 'Preparation and filing of corporate tax returns for businesses of all sizes.',
     icon: <BusinessIcon sx={{ fontSize: 48 }} />,
@@ -133,7 +232,7 @@ const mainServices = [
     category: ['All Services', 'Corporate']
   },
   {
-    id: 9,
+    id: 18,
     title: 'Tax Planning Consultation',
     description: 'Strategic tax planning advice to minimize tax liability and maximize savings.',
     icon: <AssignmentIcon sx={{ fontSize: 48 }} />,
@@ -144,7 +243,7 @@ const mainServices = [
     category: ['All Services', 'Consultations', 'Personal', 'Corporate']
   },
   {
-    id: 10,
+    id: 19,   
     title: 'Business Registration',
     description: 'Complete business registration services for new businesses.',
     icon: <DescriptionIcon sx={{ fontSize: 48 }} />,
@@ -155,7 +254,7 @@ const mainServices = [
     category: ['All Services', 'Business']
   },
   {
-    id: 11,
+    id: 20,
     title: 'Financial Statement Preparation',
     description: 'Preparation of financial statements for businesses and organizations.',
     icon: <AssessmentIcon sx={{ fontSize: 48 }} />,
@@ -166,7 +265,7 @@ const mainServices = [
     category: ['All Services', 'Business', 'Corporate']
   },
   {
-    id: 12,
+    id: 21,
     title: 'GST/HST Filing',
     description: 'Preparation and filing of GST/HST returns for businesses.',
     icon: <AttachMoneyIcon sx={{ fontSize: 48 }} />,
@@ -177,7 +276,7 @@ const mainServices = [
     category: ['All Services', 'Business']
   },
   {
-    id: 13,
+    id: 22,
     title: 'Retirement Planning',
     description: 'Comprehensive retirement planning services to ensure financial security.',
     icon: <AccountBalanceWalletIcon sx={{ fontSize: 48 }} />,
@@ -188,7 +287,7 @@ const mainServices = [
     category: ['All Services', 'Personal', 'Consultations']
   },
   {
-    id: 14,
+    id: 23,
     title: 'Estate Planning',
     description: 'Estate planning services to protect assets and minimize tax implications.',
     icon: <DescriptionIcon sx={{ fontSize: 48 }} />,
@@ -199,7 +298,7 @@ const mainServices = [
     category: ['All Services', 'Personal', 'Consultations']
   },
   {
-    id: 15,
+    id:   24,
     title: 'Investment Consultation',
     description: 'Expert advice on investment strategies to maximize returns.',
     icon: <MonetizationOnIcon sx={{ fontSize: 48 }} />,
@@ -210,7 +309,7 @@ const mainServices = [
     category: ['All Services', 'Personal', 'Consultations']
   },
   {
-    id: 16,
+    id: 25,
     title: 'Business Valuation',
     description: 'Professional valuation of businesses for sale, purchase, or other purposes.',
     icon: <BusinessIcon sx={{ fontSize: 48 }} />,
@@ -221,7 +320,7 @@ const mainServices = [
     category: ['All Services', 'Business', 'Corporate', 'Consultations']
   },
   {
-    id: 17,
+    id: 26,
     title: 'Quarterly Tax Payments',
     description: 'Management and filing of quarterly tax payments for businesses.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
@@ -232,7 +331,7 @@ const mainServices = [
     category: ['All Services', 'Business', 'Corporate']
   },
   {
-    id: 18,
+    id: 27,
     title: 'Financial Forecasting',
     description: 'Development of financial forecasts and projections for businesses.',
     icon: <AssessmentIcon sx={{ fontSize: 48 }} />,
@@ -243,7 +342,7 @@ const mainServices = [
     category: ['All Services', 'Business', 'Corporate', 'Consultations']
   },
   {
-    id: 19,
+    id: 28,
     title: 'Non-Profit Tax Filing',
     description: 'Specialized tax filing services for non-profit organizations.',
     icon: <ReceiptIcon sx={{ fontSize: 48 }} />,
@@ -254,7 +353,7 @@ const mainServices = [
     category: ['All Services', 'Corporate']
   },
   {
-    id: 20,
+    id: 30,
     title: 'Tax Audit Representation',
     description: 'Professional representation during tax audits by government agencies.',
     icon: <AccountBalanceIcon sx={{ fontSize: 48 }} />,
@@ -265,7 +364,7 @@ const mainServices = [
     category: ['All Services', 'Personal', 'Corporate', 'Business']
   },
   {
-    id: 21,
+    id: 31,
     title: 'Cash Flow Management',
     description: 'Strategies and services to optimize cash flow for businesses.',
     icon: <AttachMoneyIcon sx={{ fontSize: 48 }} />,
@@ -276,7 +375,7 @@ const mainServices = [
     category: ['All Services', 'Business']
   },
   {
-    id: 22,
+    id: 32,
     title: 'Tax Deduction Planning',
     description: 'Strategic planning to maximize tax deductions for individuals and businesses.',
     icon: <CalculateIcon sx={{ fontSize: 48 }} />,
@@ -287,7 +386,7 @@ const mainServices = [
     category: ['All Services', 'Personal', 'Corporate', 'Business']
   },
   {
-    id: 23,
+    id: 33,
     title: 'International Tax Services',
     description: 'Specialized tax services for individuals and businesses with international operations.',
     icon: <BusinessIcon sx={{ fontSize: 48 }} />,
@@ -298,7 +397,7 @@ const mainServices = [
     category: ['All Services', 'Personal', 'Corporate', 'Business']
   },
   {
-    id: 24,
+    id: 34,
     title: 'Financial Software Setup',
     description: 'Installation and configuration of financial software for businesses.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
@@ -309,7 +408,7 @@ const mainServices = [
     category: ['All Services', 'Business']
   },
   {
-    id: 25,
+    id: 35,
     title: 'Business Restructuring',
     description: 'Professional services for businesses undergoing restructuring or reorganization.',
     icon: <BusinessIcon sx={{ fontSize: 48 }} />,
