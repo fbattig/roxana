@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Typography, Card, CardContent, Container, Button, useTheme, useMediaQuery, Modal, Fade } from '@mui/material';
+import { Box, Grid, Typography, Card, CardContent, Container, Button, useTheme, useMediaQuery, Modal, Fade, Tooltip } from '@mui/material';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import BookIcon from '@mui/icons-material/Book';
@@ -365,9 +365,7 @@ const Services = () => {
   const [activeCategory, setActiveCategory] = useState('All Services');
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
-  const [hoveredImage, setHoveredImage] = useState(null);
   const [imagePopup, setImagePopup] = useState({ open: false, image: null, title: null });
-  const popupTimeoutRef = React.useRef(null);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -398,40 +396,17 @@ const Services = () => {
     setActiveCategory(category);
   };
 
-  // Handle image popup open with delay to prevent flickering
-  const handleImagePopupOpen = (service) => {
-    // Clear any existing timeout to prevent conflicts
-    if (popupTimeoutRef.current) {
-      clearTimeout(popupTimeoutRef.current);
-    }
-    
-    // Set a small delay before opening the popup to prevent flickering
-    popupTimeoutRef.current = setTimeout(() => {
-      setImagePopup({ open: true, image: service.image, title: service.title });
-    }, 100);
+  // Handle image popup open
+  const handleImagePopupOpen = (service, event) => {
+    // Prevent the click from propagating to parent elements
+    event.stopPropagation();
+    setImagePopup({ open: true, image: service.image, title: service.title });
   };
 
-  // Handle image popup close with delay to prevent flickering
+  // Handle image popup close
   const handleImagePopupClose = () => {
-    // Clear any existing timeout to prevent conflicts
-    if (popupTimeoutRef.current) {
-      clearTimeout(popupTimeoutRef.current);
-    }
-    
-    // Set a small delay before closing the popup to prevent flickering
-    popupTimeoutRef.current = setTimeout(() => {
-      setImagePopup({ open: false, image: null, title: null });
-    }, 300);
+    setImagePopup({ open: false, image: null, title: null });
   };
-
-  // Clean up timeout on component unmount
-  React.useEffect(() => {
-    return () => {
-      if (popupTimeoutRef.current) {
-        clearTimeout(popupTimeoutRef.current);
-      }
-    };
-  }, []);
 
   return (
     <Box
@@ -505,39 +480,57 @@ const Services = () => {
                       }
                     }}
                   >
-                    <Box 
-                      sx={{ 
-                        height: 180, 
-                        overflow: 'hidden',
-                        position: 'relative',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        '& img': {
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          transition: 'transform 0.3s ease-in-out'
-                        },
-                        '&:hover img': {
-                          transform: 'scale(1.05)'
-                        },
-                        cursor: 'pointer',
-                        backgroundColor: 'rgba(245, 245, 245, 0.5)',
-                        padding: 2
-                      }}
-                      onMouseEnter={() => handleImagePopupOpen(service)}
-                      onMouseLeave={handleImagePopupClose}
-                    >
-                      <img 
-                        src={service.image} 
-                        alt={service.title} 
-                        onError={(e) => {
-                          console.log(`Failed to load image: ${service.image}`);
-                          e.target.src = DEFAULT_IMAGE;
+                    <Tooltip title="Click to view larger image" placement="top" arrow>
+                      <Box 
+                        sx={{ 
+                          height: 180, 
+                          overflow: 'hidden',
+                          position: 'relative',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          '& img': {
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            transition: 'transform 0.3s ease-in-out'
+                          },
+                          '&:hover img': {
+                            transform: 'scale(1.05)'
+                          },
+                          cursor: 'pointer',
+                          backgroundColor: 'rgba(245, 245, 245, 0.5)',
+                          padding: 2
                         }}
-                      />
-                    </Box>
+                        onClick={(e) => handleImagePopupOpen(service, e)}
+                      >
+                        <Box 
+                          sx={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 10,
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            borderRadius: '50%',
+                            width: 30,
+                            height: 30,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            zIndex: 2
+                          }}
+                        >
+                          <Typography variant="body2" sx={{ fontWeight: 'bold' }}>+</Typography>
+                        </Box>
+                        <img 
+                          src={service.image} 
+                          alt={service.title} 
+                          onError={(e) => {
+                            console.log(`Failed to load image: ${service.image}`);
+                            e.target.src = DEFAULT_IMAGE;
+                          }}
+                        />
+                      </Box>
+                    </Tooltip>
                     <CardContent sx={{ 
                       flexGrow: 1, 
                       p: 2, 
@@ -737,45 +730,26 @@ const Services = () => {
         open={imagePopup.open}
         onClose={handleImagePopupClose}
         closeAfterTransition
-        disableAutoFocus
-        disableEnforceFocus
-        BackdropProps={{
-          invisible: true
-        }}
         sx={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          p: 2,
-          pointerEvents: 'none'
+          p: 2
         }}
       >
         <Fade in={imagePopup.open} timeout={200}>
           <Box
             sx={{
-              position: 'fixed',
+              position: 'relative',
               bgcolor: 'background.paper',
               borderRadius: 2,
               boxShadow: 24,
               p: 2,
-              maxWidth: '60vw',
-              maxHeight: '70vh',
+              maxWidth: '80vw',
+              maxHeight: '80vh',
               overflow: 'hidden',
-              outline: 'none',
-              zIndex: 9999,
-              pointerEvents: 'auto'
+              outline: 'none'
             }}
-            onMouseEnter={() => {
-              // Clear any close timeout when mouse enters the popup
-              if (popupTimeoutRef.current) {
-                clearTimeout(popupTimeoutRef.current);
-              }
-              // Ensure popup stays open
-              if (!imagePopup.open) {
-                setImagePopup({ ...imagePopup, open: true });
-              }
-            }}
-            onMouseLeave={handleImagePopupClose}
           >
             <Typography variant="h6" component="h3" gutterBottom sx={{ mb: 2, textAlign: 'center' }}>
               {imagePopup.title}
@@ -787,7 +761,7 @@ const Services = () => {
                 alignItems: 'center',
                 width: '100%',
                 height: '100%',
-                maxHeight: 'calc(70vh - 80px)',
+                maxHeight: 'calc(80vh - 80px)',
                 overflow: 'hidden'
               }}
             >
@@ -805,6 +779,23 @@ const Services = () => {
                 }}
               />
             </Box>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleImagePopupClose}
+              sx={{
+                position: 'absolute',
+                top: 10,
+                right: 10,
+                minWidth: 'auto',
+                width: 30,
+                height: 30,
+                p: 0,
+                borderRadius: '50%'
+              }}
+            >
+              X
+            </Button>
           </Box>
         </Fade>
       </Modal>
