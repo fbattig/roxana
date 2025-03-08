@@ -366,6 +366,7 @@ const Services = () => {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const [hoveredImage, setHoveredImage] = useState(null);
+  const [imagePopup, setImagePopup] = useState({ open: false, image: null, title: null });
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -394,6 +395,16 @@ const Services = () => {
   // Handle category change
   const handleCategoryChange = (category) => {
     setActiveCategory(category);
+  };
+
+  // Handle image popup open
+  const handleImagePopupOpen = (service) => {
+    setImagePopup({ open: true, image: service.image, title: service.title });
+  };
+
+  // Handle image popup close
+  const handleImagePopupClose = () => {
+    setImagePopup({ open: false, image: null, title: null });
   };
 
   return (
@@ -470,7 +481,7 @@ const Services = () => {
                   >
                     <Box 
                       sx={{ 
-                        height: 200, 
+                        height: 180, 
                         overflow: 'hidden',
                         position: 'relative',
                         display: 'flex',
@@ -485,12 +496,12 @@ const Services = () => {
                         '&:hover img': {
                           transform: 'scale(1.05)'
                         },
-                        cursor: service.image === 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp' ? 'pointer' : 'default',
+                        cursor: 'pointer',
                         backgroundColor: 'rgba(245, 245, 245, 0.5)',
                         padding: 2
                       }}
-                      onMouseEnter={() => service.image === 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp' ? setHoveredImage(service.image) : null}
-                      onMouseLeave={() => service.image === 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp' ? setHoveredImage(null) : null}
+                      onMouseEnter={() => handleImagePopupOpen(service)}
+                      onMouseLeave={handleImagePopupClose}
                     >
                       <img 
                         src={service.image} 
@@ -506,7 +517,7 @@ const Services = () => {
                       p: 2, 
                       display: 'flex', 
                       flexDirection: 'column',
-                      height: 220
+                      height: 240
                     }}>
                       <Typography variant="h5" component="h2" gutterBottom sx={{ 
                         fontWeight: 600, 
@@ -521,10 +532,10 @@ const Services = () => {
                       </Typography>
                       <Typography variant="body2" color="text.secondary" sx={{ 
                         mb: 2,
-                        height: 60,
+                        height: 80,
                         overflow: 'hidden',
                         display: '-webkit-box',
-                        WebkitLineClamp: 3,
+                        WebkitLineClamp: 4,
                         WebkitBoxOrient: 'vertical'
                       }}>
                         {service.description}
@@ -695,57 +706,68 @@ const Services = () => {
         </Container>
       </Box>
 
-      {/* Image Preview Modal */}
+      {/* Image Popup Modal */}
       <Modal
-        open={hoveredImage !== null}
-        onClose={() => setHoveredImage(null)}
+        open={imagePopup.open}
+        onClose={handleImagePopupClose}
         closeAfterTransition
         disableAutoFocus
         disableEnforceFocus
+        BackdropProps={{
+          invisible: true
+        }}
         sx={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          p: 2,
           pointerEvents: 'none'
         }}
       >
-        <Fade in={hoveredImage !== null}>
+        <Fade in={imagePopup.open} timeout={200}>
           <Box
             sx={{
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              padding: 4,
-              maxWidth: '95vw',
-              maxHeight: '95vh',
-              outline: 'none',
+              position: 'fixed',
+              bgcolor: 'background.paper',
               borderRadius: 2,
-              position: 'relative',
+              boxShadow: 24,
+              p: 2,
+              maxWidth: '60vw',
+              maxHeight: '70vh',
+              overflow: 'hidden',
+              outline: 'none',
+              zIndex: 9999,
               pointerEvents: 'auto'
             }}
           >
-            <img
-              src={hoveredImage}
-              alt="Enlarged view"
-              style={{
-                maxWidth: '100%',
-                maxHeight: '85vh',
-                objectFit: 'contain',
-                display: 'block',
-                margin: '0 auto',
-                transform: 'scale(1.5)',
-                transformOrigin: 'center center'
-              }}
-            />
-            <Typography 
-              variant="body2" 
-              sx={{ 
-                color: 'white', 
-                textAlign: 'center', 
-                mt: 1,
-                opacity: 0.8
+            <Typography variant="h6" component="h3" gutterBottom sx={{ mb: 2, textAlign: 'center' }}>
+              {imagePopup.title}
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                height: '100%',
+                maxHeight: 'calc(70vh - 80px)',
+                overflow: 'hidden'
               }}
             >
-              Move mouse away to close
-            </Typography>
+              <img
+                src={imagePopup.image}
+                alt={imagePopup.title}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  objectFit: 'contain'
+                }}
+                onError={(e) => {
+                  console.log(`Failed to load popup image`);
+                  e.target.src = DEFAULT_IMAGE;
+                }}
+              />
+            </Box>
           </Box>
         </Fade>
       </Modal>
