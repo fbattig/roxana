@@ -80,7 +80,7 @@ const mainServices = [
   {
     id: 4,
     title: 'Consultation on Review Letters received from Canada Revenue',
-    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    description: 'Expert guidance and assistance with CRA review letters to help resolve tax inquiries and issues.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
     image: reviewLettersConsultationImage,
     time: '4 hrs',
@@ -91,7 +91,7 @@ const mainServices = [
   {
     id: 5,
     title: 'Commission Income Tax Filing',
-    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    description: 'Specialized tax filing service for individuals earning commission-based income.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
     image: commissionIncomeImage,
     time: '8 hrs',
@@ -102,7 +102,7 @@ const mainServices = [
   {
     id: 6,
     title: 'Consultation - New Clients',
-    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    description: 'Initial consultation for new clients to assess tax needs and provide personalized guidance.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
     image: newClientsConsultationImage,
     time: '45 mins',
@@ -113,7 +113,7 @@ const mainServices = [
   {
     id: 7,
     title: 'Corporate Tax Preparation and filing',
-    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    description: 'Comprehensive corporate tax preparation and filing service for businesses of all sizes.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
     image: corporateTaxPreparationImage,
     time: '24 hrs',
@@ -124,7 +124,7 @@ const mainServices = [
   {
     id: 8,
     title: 'Corporate Tax Consultation',
-    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    description: 'Expert consultation on corporate tax matters to optimize tax strategies and ensure compliance.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
     image: corporateTaxConsultationImage,
     time: '1 hr',
@@ -135,7 +135,7 @@ const mainServices = [
   {
     id: 9,
     title: 'Disability Credit Application',
-    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    description: 'Assistance with completing and filing disability tax credit applications with the CRA.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
     image: disabilityCreditImage,
     time: '2 hrs',
@@ -146,7 +146,7 @@ const mainServices = [
   {
     id: 10,
     title: 'Full Time Students Tax Filing',
-    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    description: 'Specialized tax filing service for full-time students, maximizing education-related credits and deductions.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
     image: fullTimeStudentsImage,
     time: '4 hrs',
@@ -157,7 +157,7 @@ const mainServices = [
   {
     id: 11,
     title: 'HST Preparation and Filing',
-    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    description: 'Professional preparation and filing of Harmonized Sales Tax (HST) returns for businesses.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
     image: hstPreparationImage,
     time: '8 hrs',
@@ -168,7 +168,7 @@ const mainServices = [
   {
     id: 12,
     title: 'Professional Income Tax',
-    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    description: 'Specialized tax filing service for professionals such as doctors, lawyers, and consultants.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
     image: professionalIncomeImage,
     time: '24 hrs',
@@ -179,7 +179,7 @@ const mainServices = [
   {
     id:   13,
     title: 'Monthly Corporate Bookkeeping Services',
-    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
+    description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance for corporations.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
     image: monthlyBookkeepingImage,
     time: '4 hrs',
@@ -201,7 +201,7 @@ const mainServices = [
   {
     id: 15,
     title: 'New Comers Tax Filing',
-    description: 'Complete payroll management including reports, remittances, and tax payments to CRA.',
+    description: 'Specialized tax filing service for newcomers to Canada, addressing unique tax situations and credits.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
     image: newComersImage,
     time: '6 hrs',
@@ -212,7 +212,7 @@ const mainServices = [
   {
     id: 16,
     title: 'Personal Tax Filing',
-    description: 'Complete payroll management including reports, remittances, and tax payments to CRA.',
+    description: 'Comprehensive personal income tax preparation and filing service for individuals.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
     image: personalTaxFilingImage,
     time: '4 hrs 15 mins',
@@ -223,7 +223,7 @@ const mainServices = [
   {
     id: 17,
     title: 'Record of Employment Filing',
-    description: 'Complete payroll management including reports, remittances, and tax payments to CRA.',
+    description: 'Preparation and filing of Record of Employment (ROE) documents for employers and employees.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
     image: recordOfEmploymentImage,
     time: '2 hrs',
@@ -234,7 +234,7 @@ const mainServices = [
   {
     id: 18,
     title: 'Rental Income for Sole Proprietorship/Partners Filing',
-    description: 'Complete payroll management including reports, remittances, and tax payments to CRA.',
+    description: 'Specialized tax filing for property owners reporting rental income as sole proprietors or partners.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
     image: rentalIncomeImage,
     time: '5 hrs',
@@ -245,7 +245,7 @@ const mainServices = [
   {
     id: 19,
     title: 'Senior (Over 65+) Tax Filing',
-    description: 'Complete payroll management including reports, remittances, and tax payments to CRA.',
+    description: 'Tailored tax filing service for seniors, maximizing age-related credits and benefits.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
     image: seniorTaxFilingImage,
     time: '3 hrs',
@@ -256,7 +256,7 @@ const mainServices = [
   {
     id: 20,
     title: 'T1 Adjustment Consultation',
-    description: 'Complete payroll management including reports, remittances, and tax payments to CRA.',
+    description: 'Expert guidance on adjusting previously filed T1 tax returns to correct errors or claim missed deductions.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
     image: '',
     time: '1 hrs',
@@ -267,7 +267,7 @@ const mainServices = [
   {
     id: 21,
     title: 'Final Tax return (Deceased)',
-    description: 'Complete payroll management including reports, remittances, and tax payments to CRA.',
+    description: 'Preparation and filing of final tax returns for deceased individuals, ensuring proper estate compliance.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
     image: finalTaxReturnImage,
     time: '5 hrs',
@@ -278,7 +278,7 @@ const mainServices = [
   {
     id: 22,
     title: 'WSIB Clearance',
-    description: 'Complete payroll management including reports, remittances, and tax payments to CRA.',
+    description: 'Assistance with obtaining Workplace Safety and Insurance Board (WSIB) clearance certificates.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
     image: wsibClearanceImage,
     time: '2 hrs',
@@ -289,7 +289,7 @@ const mainServices = [
   {
     id: 23,
     title: 'Uber or Taxi Driver',
-    description: 'Complete payroll management including reports, remittances, and tax payments to CRA.',
+    description: 'Specialized tax filing service for Uber, taxi, and rideshare drivers, maximizing eligible deductions.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
     image: uberTaxiDriverImage,
     time: '8 hrs',
@@ -300,7 +300,7 @@ const mainServices = [
   {
     id: 24,
     title: 'Year end Adjustment and Financial Report Preparation',
-    description: 'Complete payroll management including reports, remittances, and tax payments to CRA.',
+    description: 'Comprehensive year-end financial adjustments and preparation of detailed financial reports for businesses.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
     image: '',
     time: '7 hrs',
@@ -311,7 +311,7 @@ const mainServices = [
   {
     id: 25,
     title: 'Child Tax Benefit Application',
-    description: 'Complete payroll management including reports, remittances, and tax payments to CRA.',
+    description: 'Assistance with applying for and maximizing Canada Child Benefit (CCB) and related tax credits.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
     image: childTaxBenefitImage,
     time: '3 hrs',
@@ -322,7 +322,7 @@ const mainServices = [
   {
     id: 26,
     title: 'Marital Status Change',
-    description: 'Complete payroll management including reports, remittances, and tax payments to CRA.',
+    description: 'Tax guidance and filing assistance for individuals who have experienced a change in marital status.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
     image: maritalStatusChangeImage,
     time: '6 hrs',
