@@ -693,7 +693,7 @@ const Services = () => {
                       pt: 1.5,
                       display: 'flex',
                       flexDirection: 'column',
-                      height: 180
+                      height: 220
                     }}>
                       <Typography 
                         gutterBottom 
@@ -701,7 +701,7 @@ const Services = () => {
                         component="h3" 
                         sx={{ 
                           fontWeight: 'bold',
-                          mb: 1,
+                          mb: 0.5,
                           height: 'auto',
                           whiteSpace: 'normal',
                           overflow: 'visible'
@@ -711,22 +711,22 @@ const Services = () => {
                       </Typography>
                       <Typography variant="body2" color="text.secondary" sx={{ 
                         mb: 2,
-                        height: 110,
+                        height: 130,
                         overflow: 'hidden',
                         display: '-webkit-box',
-                        WebkitLineClamp: 6,
+                        WebkitLineClamp: 7,
                         WebkitBoxOrient: 'vertical'
                       }}>
                         {service.description}
                       </Typography>
-                      <Box sx={{ mt: 'auto', pt: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      <Box sx={{ mt: 'auto', pt: 0, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                         <Box 
                           sx={{ 
                             display: 'flex', 
                             justifyContent: 'space-between', 
                             alignItems: 'center',
                             borderTop: '1px solid #eee',
-                            pt: 1
+                            pt: 0.5
                           }}
                         >
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -745,7 +745,7 @@ const Services = () => {
                         </Box>
                       </Box>
                       
-                      <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
+                      <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
                         <Button
                           variant="contained"
                           size="small"
@@ -757,10 +757,11 @@ const Services = () => {
                               backgroundColor: '#c00000',
                             },
                             fontWeight: 'bold',
-                            flex: 1
+                            flex: 1,
+                            py: 0.5
                           }}
                         >
-                          <ListAltIcon fontSize="small" sx={{ mr: 1 }} />
+                          <ListAltIcon fontSize="small" sx={{ mr: 0.5 }} />
                           Requirements
                         </Button>
                         
@@ -772,6 +773,7 @@ const Services = () => {
                           sx={{ 
                             fontWeight: 'bold',
                             flex: 1,
+                            py: 0.5,
                             '&:hover': {
                               backgroundColor: theme.palette.primary.dark
                             }
