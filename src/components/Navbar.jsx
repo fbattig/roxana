@@ -75,20 +75,51 @@ const Navbar = () => {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={{ backgroundColor: 'white', boxShadow: 1 }}>
         <Toolbar>
-          <Typography 
-            variant="h6" 
+          <Box 
             component={Link}
             to="/"
             sx={{ 
               flexGrow: 1, 
-              color: 'primary.main',
-              fontWeight: 600,
-              fontSize: '1.5rem',
+              display: 'flex',
+              alignItems: 'center',
               textDecoration: 'none'
             }}
           >
-            RR Tax & Accounting
-          </Typography>
+            <Box 
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 50,
+                height: 50,
+                backgroundColor: 'primary.main',
+                borderRadius: '50%',
+                mr: 1.5,
+              }}
+            >
+              <Typography
+                variant="h5"
+                sx={{
+                  color: 'white',
+                  fontWeight: 700,
+                  fontFamily: '"Playfair Display", serif',
+                  lineHeight: 1,
+                }}
+              >
+                RR
+              </Typography>
+            </Box>
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                color: 'primary.main',
+                fontWeight: 600,
+                fontSize: '1.5rem',
+              }}
+            >
+              Tax & Accounting
+            </Typography>
+          </Box>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             {menuItems.map((item) => (
               <Button

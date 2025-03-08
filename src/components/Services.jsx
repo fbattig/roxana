@@ -15,6 +15,31 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import { motion } from 'framer-motion';
 import BookingModal from './BookingModal';
 
+// Import all images from RoxanaSupplied folder
+import taxSlipsImage from '../assets/images/RoxanaSupplied/Tax Slips Preparation and Filing.webp';
+import businessIncomeImage from '../assets/images/RoxanaSupplied/Business Income Sole Proprietorship or Partnership.webp';
+import childTaxBenefitImage from '../assets/images/RoxanaSupplied/Child Tax Benefit Application.webp';
+import commissionIncomeImage from '../assets/images/RoxanaSupplied/Commission Income Tax Filing.webp';
+import newClientsConsultationImage from '../assets/images/RoxanaSupplied/Consultation - New Clients.webp';
+import reviewLettersConsultationImage from '../assets/images/RoxanaSupplied/Consultation on Review Letters received from Canada Revenue.webp';
+import corporateTaxConsultationImage from '../assets/images/RoxanaSupplied/Corporate Tax Consultation.webp';
+import corporateTaxPreparationImage from '../assets/images/RoxanaSupplied/Corporate Tax Preparation and filing.webp';
+import disabilityCreditImage from '../assets/images/RoxanaSupplied/Disability Credit Application.webp';
+import finalTaxReturnImage from '../assets/images/RoxanaSupplied/Final Tax return (Deceased).webp';
+import fullTimeStudentsImage from '../assets/images/RoxanaSupplied/Full Time Students Tax Filing.webp';
+import hstPreparationImage from '../assets/images/RoxanaSupplied/HST Preparation and Filing.webp';
+import maritalStatusChangeImage from '../assets/images/RoxanaSupplied/Marital Status change.webp';
+import monthlyBookkeepingImage from '../assets/images/RoxanaSupplied/Monthly Corporate Bookkeeping Services.webp';
+import monthlyPayrollImage from '../assets/images/RoxanaSupplied/Monthly Payroll.webp';
+import newComersImage from '../assets/images/RoxanaSupplied/New Comers Tax Filing.webp';
+import personalTaxFilingImage from '../assets/images/RoxanaSupplied/Personal Tax Filing.webp';
+import professionalIncomeImage from '../assets/images/RoxanaSupplied/Professional Income Tax.webp';
+import recordOfEmploymentImage from '../assets/images/RoxanaSupplied/Record of Employment Filing.webp';
+import rentalIncomeImage from '../assets/images/RoxanaSupplied/Rental Income for Sole Proprietorship_Partners Filing.webp';
+import seniorTaxFilingImage from '../assets/images/RoxanaSupplied/Senior (Over 65+) Tax Filing.webp';
+import uberTaxiDriverImage from '../assets/images/RoxanaSupplied/Uber or Taxi Driver.webp';
+import wsibClearanceImage from '../assets/images/RoxanaSupplied/WSIB Clearance.webp';
+
 // Default image to use as fallback
 const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp';
 
@@ -24,7 +49,7 @@ const mainServices = [
     title: 'Tax Slips Preparation and Filing',
     description: 'Professional preparation and filing of your tax slips to ensure compliance and maximize returns.',
     icon: <CalculateIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: taxSlipsImage,
     time: '3 hrs',
     price: '$465',
     delay: 0,
@@ -46,7 +71,7 @@ const mainServices = [
     title: 'Business Income Sole Proprietorship or Partnership',
     description: 'Comprehensive income tax preparation for sole proprietorships and partnerships.',
     icon: <BusinessIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: businessIncomeImage,
     time: '5 hrs',
     price: '$550',
     delay: 0.4,
@@ -57,7 +82,7 @@ const mainServices = [
     title: 'Bookkeeping Services',
     description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: monthlyBookkeepingImage,
     time: '4 hrs',
     price: '$400',
     delay: 0.6,
@@ -68,7 +93,7 @@ const mainServices = [
     title: 'Payroll Services',
     description: 'Complete payroll management including reports, remittances, and tax payments to CRA.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: monthlyPayrollImage,
     time: '3 hrs',
     price: '$350',
     delay: 0.8,
@@ -90,7 +115,7 @@ const mainServices = [
     title: 'Personal Tax Return',
     description: 'Complete preparation and filing of personal income tax returns for individuals.',
     icon: <CalculateIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: personalTaxFilingImage,
     time: '2 hrs',
     price: '$250',
     delay: 0.2,
@@ -101,7 +126,7 @@ const mainServices = [
     title: 'Corporate Tax Return',
     description: 'Preparation and filing of corporate tax returns for businesses of all sizes.',
     icon: <BusinessIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: corporateTaxPreparationImage,
     time: '8 hrs',
     price: '$950',
     delay: 0.4,
@@ -112,7 +137,7 @@ const mainServices = [
     title: 'Tax Planning Consultation',
     description: 'Strategic tax planning advice to minimize tax liability and maximize savings.',
     icon: <AssignmentIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: corporateTaxConsultationImage,
     time: '2 hrs',
     price: '$300',
     delay: 0.6,
@@ -145,7 +170,7 @@ const mainServices = [
     title: 'GST/HST Filing',
     description: 'Preparation and filing of GST/HST returns for businesses.',
     icon: <AttachMoneyIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: hstPreparationImage,
     time: '2 hrs',
     price: '$200',
     delay: 0.2,
@@ -167,7 +192,7 @@ const mainServices = [
     title: 'Estate Planning',
     description: 'Estate planning services to protect assets and minimize tax implications.',
     icon: <DescriptionIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: finalTaxReturnImage,
     time: '4 hrs',
     price: '$600',
     delay: 0.6,
@@ -178,7 +203,7 @@ const mainServices = [
     title: 'Investment Consultation',
     description: 'Expert advice on investment strategies to maximize returns.',
     icon: <MonetizationOnIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: newClientsConsultationImage,
     time: '2 hrs',
     price: '$350',
     delay: 0.8,
@@ -222,7 +247,7 @@ const mainServices = [
     title: 'Non-Profit Tax Filing',
     description: 'Specialized tax filing services for non-profit organizations.',
     icon: <ReceiptIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: professionalIncomeImage,
     time: '6 hrs',
     price: '$700',
     delay: 0.6,
@@ -233,7 +258,7 @@ const mainServices = [
     title: 'Tax Audit Representation',
     description: 'Professional representation during tax audits by government agencies.',
     icon: <AccountBalanceIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: reviewLettersConsultationImage,
     time: '10 hrs',
     price: '$1,500',
     delay: 0.8,
@@ -244,7 +269,7 @@ const mainServices = [
     title: 'Cash Flow Management',
     description: 'Strategies and services to optimize cash flow for businesses.',
     icon: <AttachMoneyIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: monthlyBookkeepingImage,
     time: '3 hrs',
     price: '$450',
     delay: 1.0,
@@ -255,7 +280,7 @@ const mainServices = [
     title: 'Tax Deduction Planning',
     description: 'Strategic planning to maximize tax deductions for individuals and businesses.',
     icon: <CalculateIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: corporateTaxConsultationImage,
     time: '2 hrs',
     price: '$300',
     delay: 0.2,
@@ -266,7 +291,7 @@ const mainServices = [
     title: 'International Tax Services',
     description: 'Specialized tax services for individuals and businesses with international operations.',
     icon: <BusinessIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: newComersImage,
     time: '8 hrs',
     price: '$1,200',
     delay: 0.4,
@@ -277,7 +302,7 @@ const mainServices = [
     title: 'Financial Software Setup',
     description: 'Installation and configuration of financial software for businesses.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: monthlyBookkeepingImage,
     time: '5 hrs',
     price: '$600',
     delay: 0.6,
@@ -288,7 +313,7 @@ const mainServices = [
     title: 'Business Restructuring',
     description: 'Professional services for businesses undergoing restructuring or reorganization.',
     icon: <BusinessIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: businessIncomeImage,
     time: '12 hrs',
     price: '$1,800',
     delay: 0.8,
@@ -308,19 +333,19 @@ const features = [
   {
     title: 'Quality Assurance',
     description: 'Our team ensures accurate and reliable financial reporting.',
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: corporateTaxPreparationImage,
     delay: 0
   },
   {
     title: 'Affordability',
     description: 'Competitive pricing without compromising on service quality.',
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: personalTaxFilingImage,
     delay: 0.2
   },
   {
     title: 'Security Guaranteed',
     description: 'Your financial data is protected with industry-standard security.',
-    image: 'https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: reviewLettersConsultationImage,
     delay: 0.4
   }
 ];
