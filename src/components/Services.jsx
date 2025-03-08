@@ -365,7 +365,7 @@ const Services = () => {
   const [activeCategory, setActiveCategory] = useState('All Services');
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
-  const [imagePopup, setImagePopup] = useState({ open: false, image: null, title: null });
+  const [imagePopup, setImagePopup] = useState({ open: false, image: null, title: null, isSpecialService: false });
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -400,12 +400,17 @@ const Services = () => {
   const handleImagePopupOpen = (service, event) => {
     // Prevent the click from propagating to parent elements
     event.stopPropagation();
-    setImagePopup({ open: true, image: service.image, title: service.title });
+    setImagePopup({ 
+      open: true, 
+      image: service.image, 
+      title: service.title,
+      isSpecialService: service.title === 'Tax Slips Preparation and Filing' // Track if this is the special service
+    });
   };
 
   // Handle image popup close
   const handleImagePopupClose = () => {
-    setImagePopup({ open: false, image: null, title: null });
+    setImagePopup({ open: false, image: null, title: null, isSpecialService: false });
   };
 
   return (
@@ -458,7 +463,7 @@ const Services = () => {
           </Box>
         ) : (
           <Grid container spacing={3}>
-            {filteredServices.map((service) => (
+            {filteredServices.map((service, index) => (
               <Grid item xs={12} sm={6} md={4} key={service.id}>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -534,19 +539,23 @@ const Services = () => {
                     <CardContent sx={{ 
                       flexGrow: 1, 
                       p: 2, 
-                      display: 'flex', 
+                      pt: 1.5,
+                      display: 'flex',
                       flexDirection: 'column',
-                      height: 240
+                      height: 180
                     }}>
-                      <Typography variant="h5" component="h2" gutterBottom sx={{ 
-                        fontWeight: 600, 
-                        mb: 1,
-                        height: 60,
-                        overflow: 'hidden',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical'
-                      }}>
+                      <Typography 
+                        gutterBottom 
+                        variant="h6" 
+                        component="h3" 
+                        sx={{ 
+                          fontWeight: 'bold',
+                          mb: 1,
+                          height: 'auto',
+                          whiteSpace: 'normal',
+                          overflow: 'visible'
+                        }}
+                      >
                         {service.title}
                       </Typography>
                       <Typography variant="body2" color="text.secondary" sx={{ 
@@ -745,8 +754,8 @@ const Services = () => {
               borderRadius: 2,
               boxShadow: 24,
               p: 2,
-              maxWidth: '80vw',
-              maxHeight: '80vh',
+              maxWidth: imagePopup.isSpecialService ? '95vw' : '80vw',
+              maxHeight: imagePopup.isSpecialService ? '90vh' : '80vh',
               overflow: 'hidden',
               outline: 'none'
             }}
@@ -761,7 +770,7 @@ const Services = () => {
                 alignItems: 'center',
                 width: '100%',
                 height: '100%',
-                maxHeight: 'calc(80vh - 80px)',
+                maxHeight: imagePopup.isSpecialService ? 'calc(90vh - 80px)' : 'calc(80vh - 80px)',
                 overflow: 'hidden'
               }}
             >
@@ -771,7 +780,8 @@ const Services = () => {
                 style={{
                   maxWidth: '100%',
                   maxHeight: '100%',
-                  objectFit: 'contain'
+                  objectFit: 'contain',
+                  transform: imagePopup.isSpecialService ? 'scale(1.5)' : 'none'
                 }}
                 onError={(e) => {
                   console.log(`Failed to load popup image`);
