@@ -720,13 +720,32 @@ const Services = () => {
                         {service.description}
                       </Typography>
                       <Box sx={{ mt: 'auto', pt: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <AccessTimeIcon fontSize="small" color="primary" />
-                          <Typography variant="body2">
-                            {service.time}
-                          </Typography>
+                        <Box 
+                          sx={{ 
+                            display: 'flex', 
+                            justifyContent: 'space-between', 
+                            alignItems: 'center',
+                            borderTop: '1px solid #eee',
+                            pt: 1
+                          }}
+                        >
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <AccessTimeIcon fontSize="small" color="primary" />
+                            <Typography variant="body2" fontWeight="bold">
+                              {service.time}
+                            </Typography>
+                          </Box>
+                          
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <AttachMoneyIcon fontSize="small" color="primary" />
+                            <Typography variant="body2" fontWeight="bold">
+                              {service.price}
+                            </Typography>
+                          </Box>
                         </Box>
-                        
+                      </Box>
+                      
+                      <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
                         <Button
                           variant="contained"
                           size="small"
@@ -738,35 +757,29 @@ const Services = () => {
                               backgroundColor: '#c00000',
                             },
                             fontWeight: 'bold',
-                            my: 0.5
+                            flex: 1
                           }}
                         >
                           <ListAltIcon fontSize="small" sx={{ mr: 1 }} />
                           Requirements
                         </Button>
                         
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <AttachMoneyIcon fontSize="small" color="primary" />
-                          <Typography variant="body2">
-                            {service.price}
-                          </Typography>
-                        </Box>
+                        <Button 
+                          variant="contained" 
+                          color="primary" 
+                          size="small"
+                          onClick={() => handleBooking(service)}
+                          sx={{ 
+                            fontWeight: 'bold',
+                            flex: 1,
+                            '&:hover': {
+                              backgroundColor: theme.palette.primary.dark
+                            }
+                          }}
+                        >
+                          BOOK
+                        </Button>
                       </Box>
-                      <Button 
-                        variant="contained" 
-                        color="primary" 
-                        fullWidth 
-                        onClick={() => handleBooking(service)}
-                        sx={{ 
-                          mt: 2, 
-                          fontWeight: 'bold',
-                          '&:hover': {
-                            backgroundColor: theme.palette.primary.dark
-                          }
-                        }}
-                      >
-                        BOOK
-                      </Button>
                     </CardContent>
                   </Card>
                 </motion.div>
