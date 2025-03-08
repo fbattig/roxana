@@ -13,15 +13,13 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Load user from local storage on initial render
+  // Load user on initial render
   useEffect(() => {
     const loadUser = async () => {
       try {
         const user = getCurrentUser();
-        console.log('Loaded user from localStorage:', user);
         setCurrentUser(user);
       } catch (err) {
-        console.error('Error loading user data:', err);
         setCurrentUser(null);
       } finally {
         setLoading(false);
@@ -42,7 +40,6 @@ export const AuthProvider = ({ children }) => {
         email: userData.email,
         password: userData.password
       });
-      console.log('Login response after registration:', loginResponse);
       setCurrentUser(loginResponse.user);
       return response;
     } catch (err) {
@@ -59,7 +56,6 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const response = await loginUser(credentials);
-      console.log('Login response:', response);
       setCurrentUser(response.user);
       return response;
     } catch (err) {

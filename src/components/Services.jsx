@@ -12,6 +12,8 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 import { motion } from 'framer-motion';
 import BookingModal from './BookingModal';
 
@@ -53,7 +55,14 @@ const mainServices = [
     time: '3 hrs',
     price: '$465',
     delay: 0,
-    category: ['All Services', 'Personal', 'Corporate']
+    category: ['All Services', 'Personal', 'Corporate'],
+    requirements: [
+      'T4 slips',
+      'T4A slips',
+      'T5 slips',
+      'RRSP receipts',
+      'Medical expense receipts'
+    ]
   },
   {
     id: 2,
@@ -64,7 +73,13 @@ const mainServices = [
     time: '10 hrs 50 mins',
     price: '$1,150',
     delay: 0.2,
-    category: ['All Services', 'Corporate', 'Business']
+    category: ['All Services', 'Corporate', 'Business'],
+    requirements: [
+      'Business name',
+      'Business address',
+      'Business type (sole proprietorship, partnership, corporation)',
+      'Owner/officer information'
+    ]
   },
   {
     id: 3,
@@ -75,7 +90,12 @@ const mainServices = [
     time: '5 hrs',
     price: '$550',
     delay: 0.4,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'Business financial statements',
+      'Business expense receipts',
+      'Business income statements'
+    ]
   },
   {
     id: 4,
@@ -86,7 +106,12 @@ const mainServices = [
     time: '4 hrs',
     price: '$400',
     delay: 0.6,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'CRA review letter',
+      'Tax return documents',
+      'Supporting documentation'
+    ]
   },
   {
     id: 5,
@@ -97,7 +122,12 @@ const mainServices = [
     time: '8 hrs',
     price: '$580',
     delay: 0.6,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'T4A slips',
+      'Commission income statements',
+      'Expense receipts'
+    ]
   },
   {
     id: 6,
@@ -108,7 +138,11 @@ const mainServices = [
     time: '45 mins',
     price: '$60',
     delay: 0.6,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'Identification documents',
+      'Tax-related documents'
+    ]
   },
   {
     id: 7,
@@ -119,7 +153,12 @@ const mainServices = [
     time: '24 hrs',
     price: '$2500',
     delay: 0.6,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'Corporate financial statements',
+      'Corporate tax returns',
+      'Supporting documentation'
+    ]
   },
   {
     id: 8,
@@ -130,7 +169,12 @@ const mainServices = [
     time: '1 hr',
     price: '$80',
     delay: 0.6,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'Corporate tax returns',
+      'Financial statements',
+      'Tax-related documents'
+    ]
   },
   {
     id: 9,
@@ -141,7 +185,11 @@ const mainServices = [
     time: '2 hrs',
     price: '$250',
     delay: 0.6,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'Medical documentation',
+      'Disability tax credit application'
+    ]
   },
   {
     id: 10,
@@ -152,7 +200,12 @@ const mainServices = [
     time: '4 hrs',
     price: '$65',
     delay: 0.6,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'T4A slips',
+      'Tuition receipts',
+      'Education-related expense receipts'
+    ]
   },
   {
     id: 11,
@@ -163,7 +216,12 @@ const mainServices = [
     time: '8 hrs',
     price: '$250',
     delay: 0.6,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'HST returns',
+      'Business financial statements',
+      'Supporting documentation'
+    ]
   },
   {
     id: 12,
@@ -174,7 +232,12 @@ const mainServices = [
     time: '24 hrs',
     price: '$780',
     delay: 0.6,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'T4 slips',
+      'Professional income statements',
+      'Expense receipts'
+    ]
   },
   {
     id:   13,
@@ -185,7 +248,12 @@ const mainServices = [
     time: '4 hrs',
     price: '$400',
     delay: 0.6,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'Financial statements',
+      'Bank statements',
+      'Invoices and receipts'
+    ]
   },
   {
     id: 14,
@@ -196,7 +264,12 @@ const mainServices = [
     time: '8 hrs',
     price: '$180',
     delay: 0.8,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'Payroll records',
+      'Employee information',
+      'Benefit information'
+    ]
   },
   {
     id: 15,
@@ -207,7 +280,12 @@ const mainServices = [
     time: '6 hrs',
     price: '$250',
     delay: 0.8,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'Immigration documents',
+      'Tax-related documents',
+      'Identification documents'
+    ]
   },
   {
     id: 16,
@@ -218,7 +296,13 @@ const mainServices = [
     time: '4 hrs 15 mins',
     price: '$180',
     delay: 0.8,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'T4 slips',
+      'T4A slips',
+      'RRSP receipts',
+      'Medical expense receipts'
+    ]
   },
   {
     id: 17,
@@ -229,7 +313,12 @@ const mainServices = [
     time: '2 hrs',
     price: '$90',
     delay: 0.8,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'Employee information',
+      'Employment history',
+      'Reason for termination'
+    ]
   },
   {
     id: 18,
@@ -240,7 +329,12 @@ const mainServices = [
     time: '5 hrs',
     price: '$400',
     delay: 0.8,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'Rental income statements',
+      'Expense receipts',
+      'Property information'
+    ]
   },
   {
     id: 19,
@@ -251,7 +345,13 @@ const mainServices = [
     time: '3 hrs',
     price: '$60',
     delay: 0.8,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'T4 slips',
+      'T4A slips',
+      'RRSP receipts',
+      'Medical expense receipts'
+    ]
   },
   {
     id: 20,
@@ -262,7 +362,12 @@ const mainServices = [
     time: '1 hrs',
     price: '$120',
     delay: 0.8,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'T1 tax return documents',
+      'Notice of assessment',
+      'Supporting documentation'
+    ]
   },
   {
     id: 21,
@@ -273,7 +378,12 @@ const mainServices = [
     time: '5 hrs',
     price: '$180',
     delay: 0.8,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'Death certificate',
+      'Will and estate documents',
+      'Tax return documents'
+    ]
   },
   {
     id: 22,
@@ -284,7 +394,12 @@ const mainServices = [
     time: '2 hrs',
     price: '$100',
     delay: 0.8,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'WSIB claim information',
+      'Medical documentation',
+      'Employment history'
+    ]
   },
   {
     id: 23,
@@ -295,7 +410,12 @@ const mainServices = [
     time: '8 hrs',
     price: '$380',
     delay: 0.8,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'Uber/taxi driver information',
+      'Expense receipts',
+      'Vehicle information'
+    ]
   },
   {
     id: 24,
@@ -306,7 +426,12 @@ const mainServices = [
     time: '7 hrs',
     price: '$600',
     delay: 0.8,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'Financial statements',
+      'Accounting records',
+      'Tax return documents'
+    ]
   },
   {
     id: 25,
@@ -317,7 +442,12 @@ const mainServices = [
     time: '3 hrs',
     price: '$275',
     delay: 0.8,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'Identification documents',
+      'Child information',
+      'Income information'
+    ]
   },
   {
     id: 26,
@@ -328,7 +458,12 @@ const mainServices = [
     time: '6 hrs',
     price: '$150',
     delay: 0.8,
-    category: ['All Services', 'Business']
+    category: ['All Services', 'Business'],
+    requirements: [
+      'Identification documents',
+      'Marriage certificate',
+      'Divorce/separation documents'
+    ]
   },
 ];
 
@@ -366,17 +501,12 @@ const Services = () => {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const [imagePopup, setImagePopup] = useState({ open: false, image: null, title: null, isSpecialService: false });
+  const [requirementsModalOpen, setRequirementsModalOpen] = useState(false);
+  const [selectedRequirements, setSelectedRequirements] = useState(null);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
-
-  // Filter services based on active category
-  const filteredServices = React.useMemo(() => {
-    return mainServices.filter(service => 
-      service.category.includes(activeCategory)
-    );
-  }, [activeCategory]);
 
   // Handle booking button click
   const handleBooking = (service) => {
@@ -412,6 +542,27 @@ const Services = () => {
   const handleImagePopupClose = () => {
     setImagePopup({ open: false, image: null, title: null, isSpecialService: false });
   };
+
+  // Handle requirements button click
+  const handleRequirementsOpen = (service, event) => {
+    // Prevent the click from propagating to parent elements
+    event.stopPropagation();
+    setSelectedRequirements(service);
+    setRequirementsModalOpen(true);
+  };
+
+  // Handle requirements modal close
+  const handleRequirementsClose = () => {
+    setRequirementsModalOpen(false);
+    setSelectedRequirements(null);
+  };
+
+  // Filter services based on active category
+  const filteredServices = React.useMemo(() => {
+    return mainServices.filter(service => 
+      service.category.includes(activeCategory)
+    );
+  }, [activeCategory]);
 
   return (
     <Box
@@ -568,21 +719,38 @@ const Services = () => {
                       }}>
                         {service.description}
                       </Typography>
-                      <Box 
-                        sx={{ 
-                          display: 'flex', 
-                          justifyContent: 'space-between', 
-                          mt: 'auto', 
-                          pt: 2, 
-                          borderTop: '1px solid #eee' 
-                        }}
-                      >
-                        <Typography variant="body2" fontWeight="bold">
-                          {service.time}
-                        </Typography>
-                        <Typography variant="body2" fontWeight="bold">
-                          {service.price}
-                        </Typography>
+                      <Box sx={{ mt: 'auto', pt: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <AccessTimeIcon fontSize="small" color="primary" />
+                          <Typography variant="body2">
+                            {service.time}
+                          </Typography>
+                        </Box>
+                        
+                        <Button
+                          variant="contained"
+                          size="small"
+                          onClick={(e) => handleRequirementsOpen(service, e)}
+                          sx={{
+                            backgroundColor: 'red',
+                            color: 'yellow',
+                            '&:hover': {
+                              backgroundColor: '#c00000',
+                            },
+                            fontWeight: 'bold',
+                            my: 0.5
+                          }}
+                        >
+                          <ListAltIcon fontSize="small" sx={{ mr: 1 }} />
+                          Requirements
+                        </Button>
+                        
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <AttachMoneyIcon fontSize="small" color="primary" />
+                          <Typography variant="body2">
+                            {service.price}
+                          </Typography>
+                        </Box>
                       </Box>
                       <Button 
                         variant="contained" 
@@ -806,6 +974,76 @@ const Services = () => {
             >
               X
             </Button>
+          </Box>
+        </Fade>
+      </Modal>
+
+      {/* Requirements Modal */}
+      <Modal
+        open={requirementsModalOpen}
+        onClose={handleRequirementsClose}
+        closeAfterTransition
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          p: 2
+        }}
+      >
+        <Fade in={requirementsModalOpen} timeout={200}>
+          <Box
+            sx={{
+              position: 'relative',
+              bgcolor: 'background.paper',
+              borderRadius: 2,
+              boxShadow: 24,
+              p: 4,
+              maxWidth: '600px',
+              maxHeight: '80vh',
+              overflow: 'auto',
+              outline: 'none'
+            }}
+          >
+            {selectedRequirements && (
+              <>
+                <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+                  Requirements for {selectedRequirements.title}
+                </Typography>
+                
+                <Typography variant="body1" paragraph>
+                  To proceed with this service, please prepare the following documents and information:
+                </Typography>
+                
+                <Box component="ul" sx={{ pl: 2 }}>
+                  {selectedRequirements.requirements ? (
+                    selectedRequirements.requirements.map((req, index) => (
+                      <Box component="li" key={index} sx={{ mb: 1 }}>
+                        <Typography variant="body1">{req}</Typography>
+                      </Box>
+                    ))
+                  ) : (
+                    <Box component="li">
+                      <Typography variant="body1">
+                        Please contact us for specific requirements for this service.
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
+                
+                <Typography variant="body2" sx={{ mt: 2, fontStyle: 'italic' }}>
+                  Note: Additional documents may be required based on your specific situation.
+                </Typography>
+                
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleRequirementsClose}
+                  sx={{ mt: 3 }}
+                >
+                  Close
+                </Button>
+              </>
+            )}
           </Box>
         </Fade>
       </Modal>

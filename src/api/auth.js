@@ -60,18 +60,6 @@ export const loginUser = async (credentials) => {
       throw new Error(data.error || 'Login failed');
     }
 
-    // Store user in local storage
-    if (data.user) {
-      // Make sure firstName and lastName are properly set
-      const userData = {
-        ...data.user,
-        firstName: data.user.firstName || '',
-        lastName: data.user.lastName || ''
-      };
-      console.log('Storing user data in localStorage:', userData);
-      localStorage.setItem('user', JSON.stringify(userData));
-    }
-
     return data;
   } catch (error) {
     console.error('Login error:', error);
@@ -83,7 +71,7 @@ export const loginUser = async (credentials) => {
  * Logout the current user
  */
 export const logoutUser = () => {
-  localStorage.removeItem('user');
+  // No longer using localStorage
 };
 
 /**
@@ -91,6 +79,12 @@ export const logoutUser = () => {
  * @returns {Object|null} - Current user or null if not logged in
  */
 export const getCurrentUser = () => {
-  const userStr = localStorage.getItem('user');
-  return userStr ? JSON.parse(userStr) : null;
+  // Mock user data for development only
+  return {
+    id: 2,
+    firstName: 'Demo',
+    lastName: 'User',
+    email: 'demo@example.com',
+    createdAt: '2025-03-07 05:28:52'
+  };
 };
