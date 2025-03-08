@@ -54,6 +54,7 @@ import reviewLettersConsultationMarkdown from '../assets/docs/Consultation on Re
 import corporateTaxConsultationMarkdown from '../assets/docs/Corporate Tax Consultation.md?raw';
 import corporateTaxPreparationMarkdown from '../assets/docs/Corporate Tax Preparation and filing.md?raw';
 import disabilityCreditMarkdown from '../assets/docs/Disability Credit Application.md?raw';
+import federalCorpRegistrationMarkdown from '../assets/docs/Federal Corporation New Registration.md?raw';
 import finalTaxReturnMarkdown from '../assets/docs/Final Tax return (Deceased).md?raw';
 import fullTimeStudentsMarkdown from '../assets/docs/Full Time Students Tax Filing.md?raw';
 import hstPreparationMarkdown from '../assets/docs/HST Preparation and Filing.md?raw';
@@ -81,6 +82,7 @@ const markdownMap = {
   'Corporate Tax Consultation': corporateTaxConsultationMarkdown,
   'Corporate Tax Preparation and filing': corporateTaxPreparationMarkdown,
   'Disability Credit Application': disabilityCreditMarkdown,
+  'Federal Corporation New Registration': federalCorpRegistrationMarkdown,
   'Final Tax return (Deceased)': finalTaxReturnMarkdown,
   'Full Time Students Tax Filing': fullTimeStudentsMarkdown,
   'HST Preparation and Filing': hstPreparationMarkdown,
