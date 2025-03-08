@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Typography, Card, CardContent, Container, Button, useTheme, useMediaQuery, Modal, Fade, Tooltip, TextField } from '@mui/material';
+import { Box, Grid, Typography, Card, CardContent, Container, Button, useTheme, useMediaQuery, Modal, Fade, Tooltip, TextField, IconButton, Divider } from '@mui/material';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import BookIcon from '@mui/icons-material/Book';
@@ -17,6 +17,17 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import PrintIcon from '@mui/icons-material/Print';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import FormatBoldIcon from '@mui/icons-material/FormatBold';
+import FormatItalicIcon from '@mui/icons-material/FormatItalic';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import TitleIcon from '@mui/icons-material/Title';
+import LinkIcon from '@mui/icons-material/Link';
+import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
+import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
+import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
 import { motion } from 'framer-motion';
 import BookingModal from './BookingModal';
 import ReactMarkdown from 'react-markdown';
@@ -571,6 +582,7 @@ const Services = () => {
   const [editMode, setEditMode] = useState(false);
   const [editedMarkdown, setEditedMarkdown] = useState('');
   const [currentServiceTitle, setCurrentServiceTitle] = useState('');
+  const [helpModalOpen, setHelpModalOpen] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -591,6 +603,17 @@ const Services = () => {
     });
   };
 
+  // Toggle help modal
+  const toggleHelpModal = () => {
+    setHelpModalOpen(!helpModalOpen);
+  };
+
+  // Copy template to clipboard
+  const copyTemplate = (template) => {
+    navigator.clipboard.writeText(template);
+    alert('Template copied to clipboard!');
+  };
+
   // Toggle edit mode
   const toggleEditMode = () => {
     if (editMode) {
@@ -606,6 +629,89 @@ const Services = () => {
   // Handle markdown content change
   const handleMarkdownChange = (event) => {
     setEditedMarkdown(event.target.value);
+  };
+
+  // Insert formatting at cursor position or around selected text
+  const insertFormatting = (formatType) => {
+    const textArea = document.querySelector('.markdown-editor textarea');
+    if (!textArea) return;
+
+    const start = textArea.selectionStart;
+    const end = textArea.selectionEnd;
+    const selectedText = editedMarkdown.substring(start, end);
+    let formattedText = '';
+    let cursorOffset = 0;
+
+    switch (formatType) {
+      case 'h1':
+        formattedText = `# ${selectedText}`;
+        cursorOffset = selectedText ? 0 : 2;
+        break;
+      case 'h2':
+        formattedText = `## ${selectedText}`;
+        cursorOffset = selectedText ? 0 : 3;
+        break;
+      case 'h3':
+        formattedText = `### ${selectedText}`;
+        cursorOffset = selectedText ? 0 : 4;
+        break;
+      case 'bold':
+        formattedText = `**${selectedText}**`;
+        cursorOffset = selectedText ? 0 : 2;
+        break;
+      case 'italic':
+        formattedText = `*${selectedText}*`;
+        cursorOffset = selectedText ? 0 : 1;
+        break;
+      case 'bulletList':
+        formattedText = selectedText ? selectedText.split('\n').map(line => `- ${line}`).join('\n') : '- ';
+        cursorOffset = selectedText ? 0 : 2;
+        break;
+      case 'numberedList':
+        formattedText = selectedText 
+          ? selectedText.split('\n').map((line, index) => `${index + 1}. ${line}`).join('\n') 
+          : '1. ';
+        cursorOffset = selectedText ? 0 : 3;
+        break;
+      case 'link':
+        formattedText = selectedText ? `[${selectedText}](url)` : '[link text](url)';
+        cursorOffset = selectedText ? 1 : 1;
+        break;
+      case 'alignLeft':
+        formattedText = selectedText ? `<div align="left">\n${selectedText}\n</div>` : '<div align="left">\n\n</div>';
+        cursorOffset = selectedText ? 0 : 15;
+        break;
+      case 'alignCenter':
+        formattedText = selectedText ? `<div align="center">\n${selectedText}\n</div>` : '<div align="center">\n\n</div>';
+        cursorOffset = selectedText ? 0 : 17;
+        break;
+      case 'alignRight':
+        formattedText = selectedText ? `<div align="right">\n${selectedText}\n</div>` : '<div align="right">\n\n</div>';
+        cursorOffset = selectedText ? 0 : 16;
+        break;
+      default:
+        return;
+    }
+
+    const newText = editedMarkdown.substring(0, start) + formattedText + editedMarkdown.substring(end);
+    setEditedMarkdown(newText);
+
+    // Set focus back to the textarea and place cursor appropriately
+    setTimeout(() => {
+      textArea.focus();
+      if (selectedText) {
+        if (formatType === 'link') {
+          textArea.setSelectionRange(start + selectedText.length + 2, start + selectedText.length + 5);
+        } else if (formatType.startsWith('align') && !selectedText) {
+          // Place cursor between the div tags if no text was selected
+          textArea.setSelectionRange(start + formattedText.length - 7, start + formattedText.length - 7);
+        } else {
+          textArea.setSelectionRange(start + formattedText.length, start + formattedText.length);
+        }
+      } else {
+        textArea.setSelectionRange(start + formattedText.length - cursorOffset, start + formattedText.length - cursorOffset);
+      }
+    }, 0);
   };
 
   // Save edited markdown
@@ -1131,9 +1237,22 @@ const Services = () => {
               position: 'relative'
             }}
           >
-            <Typography variant="h6" component="h3" gutterBottom sx={{ mb: 2, textAlign: 'center' }}>
-              {imagePopup.title}
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Typography variant="h6" component="h3" sx={{ textAlign: 'center', flex: 1 }}>
+                {imagePopup.title}
+              </Typography>
+              {imagePopup.isSpecialService && editMode && (
+                <Tooltip title="Get help with markdown formatting">
+                  <IconButton 
+                    color="primary" 
+                    onClick={toggleHelpModal}
+                    sx={{ ml: 1 }}
+                  >
+                    <HelpOutlineIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </Box>
             {imagePopup.isSpecialService ? (
               <Box sx={{ 
                 p: 2, 
@@ -1144,24 +1263,125 @@ const Services = () => {
                 overflow: 'auto'
               }}>
                 {editMode ? (
-                  <TextField
-                    multiline
-                    fullWidth
-                    variant="outlined"
-                    value={editedMarkdown}
-                    onChange={handleMarkdownChange}
-                    sx={{
-                      fontFamily: 'monospace',
-                      '& .MuiOutlinedInput-root': {
+                  <Box>
+                    <Box sx={{ 
+                      mb: 1, 
+                      p: 1, 
+                      backgroundColor: '#f0f0f0', 
+                      borderRadius: '4px 4px 0 0',
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: 0.5
+                    }}>
+                      <Tooltip title="Heading 1">
+                        <IconButton size="small" onClick={() => insertFormatting('h1')}>
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <TitleIcon fontSize="small" />
+                            <Typography variant="caption" sx={{ ml: 0.5 }}>1</Typography>
+                          </Box>
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Heading 2">
+                        <IconButton size="small" onClick={() => insertFormatting('h2')}>
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <TitleIcon fontSize="small" />
+                            <Typography variant="caption" sx={{ ml: 0.5 }}>2</Typography>
+                          </Box>
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Heading 3">
+                        <IconButton size="small" onClick={() => insertFormatting('h3')}>
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <TitleIcon fontSize="small" />
+                            <Typography variant="caption" sx={{ ml: 0.5 }}>3</Typography>
+                          </Box>
+                        </IconButton>
+                      </Tooltip>
+                      <Divider orientation="vertical" flexItem />
+                      <Tooltip title="Bold">
+                        <IconButton size="small" onClick={() => insertFormatting('bold')}>
+                          <FormatBoldIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Italic">
+                        <IconButton size="small" onClick={() => insertFormatting('italic')}>
+                          <FormatItalicIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Divider orientation="vertical" flexItem />
+                      <Tooltip title="Align Left">
+                        <IconButton size="small" onClick={() => insertFormatting('alignLeft')}>
+                          <FormatAlignLeftIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Align Center">
+                        <IconButton size="small" onClick={() => insertFormatting('alignCenter')}>
+                          <FormatAlignCenterIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Align Right">
+                        <IconButton size="small" onClick={() => insertFormatting('alignRight')}>
+                          <FormatAlignRightIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Divider orientation="vertical" flexItem />
+                      <Tooltip title="Bullet List">
+                        <IconButton size="small" onClick={() => insertFormatting('bulletList')}>
+                          <FormatListBulletedIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Numbered List">
+                        <IconButton size="small" onClick={() => insertFormatting('numberedList')}>
+                          <FormatListNumberedIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Divider orientation="vertical" flexItem />
+                      <Tooltip title="Link">
+                        <IconButton size="small" onClick={() => insertFormatting('link')}>
+                          <LinkIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                    <TextField
+                      multiline
+                      fullWidth
+                      variant="outlined"
+                      value={editedMarkdown}
+                      onChange={handleMarkdownChange}
+                      className="markdown-editor"
+                      sx={{
                         fontFamily: 'monospace',
-                        fontSize: '0.9rem',
-                      },
-                      minHeight: '400px',
-                      '& textarea': {
+                        '& .MuiOutlinedInput-root': {
+                          fontFamily: 'monospace',
+                          fontSize: '0.9rem',
+                          borderRadius: '0 0 4px 4px',
+                        },
                         minHeight: '400px',
-                      }
-                    }}
-                  />
+                        '& textarea': {
+                          minHeight: '400px',
+                          lineHeight: '1.5',
+                          padding: '12px',
+                        }
+                      }}
+                      InputProps={{
+                        sx: {
+                          '& textarea': {
+                            '& h1, & h2, & h3, & h4, & h5, & h6': {
+                              color: 'primary.main',
+                            },
+                          }
+                        }
+                      }}
+                    />
+                    <Box sx={{ mt: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="caption" color="text.secondary">
+                        Use markdown syntax or the toolbar buttons for formatting
+                      </Typography>
+                      <Typography variant="caption" color="primary">
+                        {editedMarkdown.length} characters
+                      </Typography>
+                    </Box>
+                  </Box>
                 ) : (
                   markdownContent ? (
                     <ReactMarkdown>{markdownContent}</ReactMarkdown>
@@ -1255,6 +1475,160 @@ const Services = () => {
         </Fade>
       </Modal>
 
+      {/* Markdown Help Modal */}
+      <Modal
+        open={helpModalOpen}
+        onClose={toggleHelpModal}
+        closeAfterTransition
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          p: 2
+        }}
+      >
+        <Fade in={helpModalOpen}>
+          <Box
+            sx={{
+              backgroundColor: 'white',
+              borderRadius: 2,
+              boxShadow: 24,
+              p: 4,
+              maxWidth: '800px',
+              maxHeight: '90vh',
+              width: '100%',
+              overflow: 'auto',
+              position: 'relative'
+            }}
+          >
+            <Typography variant="h5" component="h2" gutterBottom sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+              Markdown Formatting Guide
+            </Typography>
+            
+            <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+              Basic Formatting
+            </Typography>
+            <Box component="pre" sx={{ backgroundColor: '#f5f5f5', p: 2, borderRadius: 1, overflow: 'auto' }}>
+              # Heading 1
+              ## Heading 2
+              ### Heading 3
+              
+              **Bold text**
+              *Italic text*
+              
+              - Bullet point 1
+              - Bullet point 2
+              
+              1. Numbered item 1
+              2. Numbered item 2
+              
+              [Link text](https://example.com)
+            </Box>
+            
+            <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+              Service Description Templates
+            </Typography>
+            
+            <Box sx={{ mt: 2, mb: 3, p: 2, backgroundColor: '#f0f7ff', borderRadius: 1, border: '1px solid #cce5ff' }}>
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
+                Basic Service Template
+                <IconButton size="small" onClick={() => copyTemplate(basicServiceTemplate)} title="Copy template">
+                  <ContentCopyIcon fontSize="small" />
+                </IconButton>
+              </Typography>
+              <Box component="pre" sx={{ backgroundColor: '#fff', p: 2, borderRadius: 1, overflow: 'auto', fontSize: '0.85rem' }}>
+                {`# ${currentServiceTitle}
+
+## Service Overview
+Brief description of the service and its benefits.
+
+## Required Documents
+- Document 1
+- Document 2
+- Document 3
+
+## Process
+1. Initial consultation
+2. Document review
+3. Service completion
+
+## Timeframe
+Typical completion time: X days/weeks
+
+## Additional Information
+Any other relevant details about the service.`}
+              </Box>
+            </Box>
+            
+            <Box sx={{ mt: 2, mb: 3, p: 2, backgroundColor: '#fff3e0', borderRadius: 1, border: '1px solid #ffe0b2' }}>
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
+                Detailed Tax Service Template
+                <IconButton size="small" onClick={() => copyTemplate(taxServiceTemplate)} title="Copy template">
+                  <ContentCopyIcon fontSize="small" />
+                </IconButton>
+              </Typography>
+              <Box component="pre" sx={{ backgroundColor: '#fff', p: 2, borderRadius: 1, overflow: 'auto', fontSize: '0.85rem' }}>
+                {`# ${currentServiceTitle}
+
+## Service Overview
+Comprehensive description of this tax service and how it benefits clients.
+
+## Eligibility
+- Who is eligible for this service
+- Special conditions or requirements
+
+## Required Documents
+- Personal identification (specify types)
+- Financial documents (specify types)
+- Previous tax returns (if applicable)
+- Supporting documentation
+
+## Our Process
+1. Initial consultation and document collection
+2. Review of financial information
+3. Preparation of tax documents
+4. Quality assurance review
+5. Filing with tax authorities
+6. Follow-up support
+
+## Timeframe
+- Processing time: X business days
+- Expedited service available: Yes/No
+
+## Fees
+- Base service fee: $X
+- Additional charges for complex situations
+
+## Benefits
+- Benefit 1
+- Benefit 2
+- Benefit 3
+
+## Frequently Asked Questions
+**Q: Common question 1?**
+A: Answer to question 1.
+
+**Q: Common question 2?**
+A: Answer to question 2.`}
+              </Box>
+            </Box>
+            
+            <Typography variant="body2" sx={{ mt: 2, fontStyle: 'italic' }}>
+              Click the copy icon to copy a template to your clipboard, then paste it into the editor.
+            </Typography>
+            
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={toggleHelpModal}
+              sx={{ mt: 3, display: 'block', mx: 'auto' }}
+            >
+              Close Help
+            </Button>
+          </Box>
+        </Fade>
+      </Modal>
+
       {/* Requirements Modal */}
       <Modal
         open={requirementsModalOpen}
@@ -1336,3 +1710,68 @@ const Services = () => {
 };
 
 export default Services;
+
+// Template constants
+const basicServiceTemplate = `# [Service Title]
+
+## Service Overview
+Brief description of the service and its benefits.
+
+## Required Documents
+- Document 1
+- Document 2
+- Document 3
+
+## Process
+1. Initial consultation
+2. Document review
+3. Service completion
+
+## Timeframe
+Typical completion time: X days/weeks
+
+## Additional Information
+Any other relevant details about the service.`;
+
+const taxServiceTemplate = `# [Service Title]
+
+## Service Overview
+Comprehensive description of this tax service and how it benefits clients.
+
+## Eligibility
+- Who is eligible for this service
+- Special conditions or requirements
+
+## Required Documents
+- Personal identification (specify types)
+- Financial documents (specify types)
+- Previous tax returns (if applicable)
+- Supporting documentation
+
+## Our Process
+1. Initial consultation and document collection
+2. Review of financial information
+3. Preparation of tax documents
+4. Quality assurance review
+5. Filing with tax authorities
+6. Follow-up support
+
+## Timeframe
+- Processing time: X business days
+- Expedited service available: Yes/No
+
+## Fees
+- Base service fee: $X
+- Additional charges for complex situations
+
+## Benefits
+- Benefit 1
+- Benefit 2
+- Benefit 3
+
+## Frequently Asked Questions
+**Q: Common question 1?**
+A: Answer to question 1.
+
+**Q: Common question 2?**
+A: Answer to question 2.`;
