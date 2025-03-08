@@ -12,30 +12,93 @@ This service is **only for businesses with payroll** that are required to file *
 
 To prepare and file your tax slips, please provide the following documents:
 
-### Personal Information
-- Government-issued photo ID (driver's license, passport)
-- Social Insurance Number (SIN)
-- Date of birth
-- Current address and contact information
-- Previous year's tax return (if available)
+### Business Information
+- Business Number (BN) and program account numbers
+- Business name and address
+- Authorized contact person information
+- Previous year's tax slip filings (if not filed with us)
+- CRA correspondence related to tax slips
+- Payroll software access or reports (if applicable)
 
-### Income Documents
-- T4 (Statement of Remuneration Paid)
-- T4A (Statement of Pension, Retirement, Annuity, and Other Income)
-- T4E (Statement of Employment Insurance Benefits)
-- T5 (Statement of Investment Income)
-- T3 (Statement of Trust Income)
-- T5007 (Statement of Benefits)
-- T5008 (Statement of Securities Transactions)
+### Employee/Recipient Information
+- Complete list of all employees/recipients requiring tax slips
+- Social Insurance Numbers (SIN) for all recipients
+- Current addresses for all recipients
+- Employment status (active or terminated)
+- Date of hire/termination (if applicable)
 
-### Additional Documents (if applicable)
-- Receipts for RRSP contributions
-- Charitable donation receipts
-- Medical expense receipts
-- Tuition fee receipts (T2202A)
-- Rent or property tax receipts
-- Child care expense receipts
-- Moving expense receipts
+### Income Information
+- Detailed payroll records for the tax year
+- Breakdown of regular earnings, bonuses, and other taxable benefits
+- Commission payment details
+- Pension adjustment calculations (if applicable)
+- Taxable benefit calculations (group insurance, automobile, etc.)
+- RRSP contribution information
+- Stock option benefit details (if applicable)
+
+### Deduction Information
+- Income tax deductions
+- CPP/QPP contributions
+- EI premiums
+- RPP contributions
+- Union dues
+- Charitable donations through payroll
+- Other deductions
+
+## Types of Tax Slips We Prepare
+
+### T4 - Statement of Remuneration Paid
+- For employees who received salary, wages, tips, commissions, bonuses, vacation pay, employment benefits, or other remuneration
+- Includes reporting of taxable benefits and allowances
+- Proper coding of special payments and situations
+
+### T4A - Statement of Pension, Retirement, Annuity, and Other Income
+- For recipients of pension or retirement income
+- For independent contractors and self-employed individuals
+- For scholarships, bursaries, and research grants
+- For other types of income not reported on T4
+
+### T5 - Statement of Investment Income
+- For recipients of dividends from Canadian corporations
+- For interest from Canadian sources
+- For foreign income and foreign taxes paid
+- For royalties and other investment income
+
+### T5018 - Statement of Contract Payments
+- For businesses in construction who made payments to subcontractors
+
+### Other Specialized Slips
+- T3 - Statement of Trust Income
+- T5007 - Statement of Benefits
+- T5008 - Statement of Securities Transactions
+- NR4 - Statement of Amounts Paid or Credited to Non-Residents of Canada
+
+## Our Tax Slip Preparation Services Include
+
+### Preparation and Verification
+- Accurate calculation of all amounts to be reported
+- Verification of recipient information
+- Proper allocation of income and deductions
+- Compliance with CRA regulations and guidelines
+- Quality control review
+
+### Filing and Distribution
+- Electronic filing with CRA before deadline
+- Secure distribution of slips to recipients
+- Confirmation of successful transmission
+- Copies for your business records
+- Summary reports for your accounting purposes
+
+### Additional Support
+- Preparation of amended slips if needed
+- Assistance with CRA inquiries
+- Guidance on taxable benefits and special situations
+- Year-round support for tax slip related questions
+
+## Important Deadlines
+- T4, T4A, T5: February 28th (or February 29th in leap years)
+- T5018: Six months after fiscal year-end
+- Electronic filing is mandatory for businesses issuing more than 50 slips
 
 ## Process Timeline
 1. Document collection and verification: 1-2 days
