@@ -42,6 +42,7 @@ import rentalIncomeImage from '../assets/images/RoxanaSupplied/Rental Income for
 import seniorTaxFilingImage from '../assets/images/RoxanaSupplied/Senior (Over 65+) Tax Filing.webp';
 import uberTaxiDriverImage from '../assets/images/RoxanaSupplied/Uber or Taxi Driver.webp';
 import wsibClearanceImage from '../assets/images/RoxanaSupplied/WSIB Clearance.webp';
+import yearEndAdjustmentImage from '../assets/images/RoxanaSupplied/Year End Adjustment and Financial Report Preparation.webp';
 
 // Import all markdown files
 import taxSlipsMarkdown from '../assets/docs/Tax Slips Preparation and Filing.md?raw';
@@ -67,6 +68,7 @@ import rentalIncomeMarkdown from '../assets/docs/Rental Income for Sole Propriet
 import seniorTaxFilingMarkdown from '../assets/docs/Senior (Over 65+) Tax Filing.md?raw';
 import uberTaxiDriverMarkdown from '../assets/docs/Uber or Taxi Driver.md?raw';
 import wsibClearanceMarkdown from '../assets/docs/WSIB Clearance.md?raw';
+import yearEndAdjustmentMarkdown from '../assets/docs/Year end Adjustment and Financial Report Preparation.md?raw';
 
 // Map service titles to their markdown content
 const markdownMap = {
@@ -92,7 +94,8 @@ const markdownMap = {
   'Rental Income for Sole Proprietorship_Partners Filing': rentalIncomeMarkdown,
   'Senior (Over 65+) Tax Filing': seniorTaxFilingMarkdown,
   'Uber or Taxi Driver': uberTaxiDriverMarkdown,
-  'WSIB Clearance': wsibClearanceMarkdown
+  'WSIB Clearance': wsibClearanceMarkdown,
+  'Year end Adjustment and Financial Report Preparation': yearEndAdjustmentMarkdown
 };
 
 // Default image to use as fallback
@@ -475,7 +478,7 @@ const mainServices = [
     title: 'Year end Adjustment and Financial Report Preparation',
     description: 'Comprehensive year-end financial adjustments and preparation of detailed financial reports for businesses.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
-    image: '',
+    image: yearEndAdjustmentImage,
     time: '7 hrs',
     price: '$600',
     delay: 0.8,
