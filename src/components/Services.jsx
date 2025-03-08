@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Typography, Card, CardContent, Container, Button, useTheme, useMediaQuery, Modal, Fade, Tooltip } from '@mui/material';
+import { Box, Grid, Typography, Card, CardContent, Container, Button, useTheme, useMediaQuery, Modal, Fade, Tooltip, TextField } from '@mui/material';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import BookIcon from '@mui/icons-material/Book';
@@ -15,6 +15,8 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import PrintIcon from '@mui/icons-material/Print';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
 import { motion } from 'framer-motion';
 import BookingModal from './BookingModal';
 import ReactMarkdown from 'react-markdown';
@@ -566,6 +568,9 @@ const Services = () => {
   const [requirementsModalOpen, setRequirementsModalOpen] = useState(false);
   const [selectedRequirements, setSelectedRequirements] = useState(null);
   const [markdownContent, setMarkdownContent] = useState('');
+  const [editMode, setEditMode] = useState(false);
+  const [editedMarkdown, setEditedMarkdown] = useState('');
+  const [currentServiceTitle, setCurrentServiceTitle] = useState('');
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -574,13 +579,54 @@ const Services = () => {
   // Function to handle requirements button click
   const handleRequirementsClick = (service, event) => {
     event.stopPropagation();
-    setMarkdownContent(markdownMap[service.title] || '*No requirements information available for this service.*');
+    const content = markdownMap[service.title] || '*No requirements information available for this service.*';
+    setMarkdownContent(content);
+    setEditedMarkdown(content);
+    setCurrentServiceTitle(service.title);
     setImagePopup({ 
       open: true, 
       image: service.image, 
       title: service.title,
       isSpecialService: true // Show markdown for all services
     });
+  };
+
+  // Toggle edit mode
+  const toggleEditMode = () => {
+    if (editMode) {
+      // Exiting edit mode without saving
+      setEditedMarkdown(markdownContent);
+    } else {
+      // Entering edit mode
+      setEditedMarkdown(markdownContent);
+    }
+    setEditMode(!editMode);
+  };
+
+  // Handle markdown content change
+  const handleMarkdownChange = (event) => {
+    setEditedMarkdown(event.target.value);
+  };
+
+  // Save edited markdown
+  const saveMarkdown = async () => {
+    try {
+      // In a real application, this would make an API call to save the content
+      // For now, we'll update it in the local state
+      setMarkdownContent(editedMarkdown);
+      
+      // Update the markdownMap with the edited content
+      markdownMap[currentServiceTitle] = editedMarkdown;
+      
+      // Exit edit mode
+      setEditMode(false);
+      
+      // Show success message
+      alert('Content saved successfully!');
+    } catch (error) {
+      console.error('Error saving markdown:', error);
+      alert('Failed to save content. Please try again.');
+    }
   };
 
   // Handle print functionality
@@ -1097,10 +1143,31 @@ const Services = () => {
                 maxHeight: 'calc(70vh - 100px)',
                 overflow: 'auto'
               }}>
-                {markdownContent ? (
-                  <ReactMarkdown>{markdownContent}</ReactMarkdown>
+                {editMode ? (
+                  <TextField
+                    multiline
+                    fullWidth
+                    variant="outlined"
+                    value={editedMarkdown}
+                    onChange={handleMarkdownChange}
+                    sx={{
+                      fontFamily: 'monospace',
+                      '& .MuiOutlinedInput-root': {
+                        fontFamily: 'monospace',
+                        fontSize: '0.9rem',
+                      },
+                      minHeight: '400px',
+                      '& textarea': {
+                        minHeight: '400px',
+                      }
+                    }}
+                  />
                 ) : (
-                  <Typography align="center" color="text.secondary">Loading content...</Typography>
+                  markdownContent ? (
+                    <ReactMarkdown>{markdownContent}</ReactMarkdown>
+                  ) : (
+                    <Typography align="center" color="text.secondary">Loading content...</Typography>
+                  )
                 )}
               </Box>
             ) : (
@@ -1133,21 +1200,48 @@ const Services = () => {
             )}
             <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center', gap: 2 }}>
               {imagePopup.isSpecialService && (
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={handlePrint}
-                  startIcon={<PrintIcon />}
-                  sx={{ 
-                    fontWeight: 'bold',
-                    backgroundColor: '#4caf50',
-                    '&:hover': {
-                      backgroundColor: '#388e3c',
-                    }
-                  }}
-                >
-                  Print
-                </Button>
+                <>
+                  {editMode ? (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={saveMarkdown}
+                      startIcon={<SaveIcon />}
+                      sx={{ 
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      Save
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={handlePrint}
+                      startIcon={<PrintIcon />}
+                      sx={{ 
+                        fontWeight: 'bold',
+                        backgroundColor: '#4caf50',
+                        '&:hover': {
+                          backgroundColor: '#388e3c',
+                        }
+                      }}
+                    >
+                      Print
+                    </Button>
+                  )}
+                  <Button
+                    variant="contained"
+                    color="info"
+                    onClick={toggleEditMode}
+                    startIcon={editMode ? null : <EditIcon />}
+                    sx={{ 
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {editMode ? 'Cancel' : 'Edit'}
+                  </Button>
+                </>
               )}
               <Button
                 variant="contained"
