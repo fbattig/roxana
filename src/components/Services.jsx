@@ -70,6 +70,7 @@ import seniorTaxFilingMarkdown from '../assets/docs/Senior (Over 65+) Tax Filing
 import uberTaxiDriverMarkdown from '../assets/docs/Uber or Taxi Driver.md?raw';
 import wsibClearanceMarkdown from '../assets/docs/WSIB Clearance.md?raw';
 import yearEndAdjustmentMarkdown from '../assets/docs/Year end Adjustment and Financial Report Preparation.md?raw';
+import t1AdjustmentMarkdown from '../assets/docs/T1 Adjustment Consultation.md?raw';
 
 // Map service titles to their markdown content
 const markdownMap = {
@@ -95,6 +96,7 @@ const markdownMap = {
   'Record of Employment Filing': recordOfEmploymentMarkdown,
   'Rental Income for Sole Proprietorship_Partners Filing': rentalIncomeMarkdown,
   'Senior (Over 65+) Tax Filing': seniorTaxFilingMarkdown,
+  'T1 Adjustment Consultation': t1AdjustmentMarkdown,
   'Uber or Taxi Driver': uberTaxiDriverMarkdown,
   'WSIB Clearance': wsibClearanceMarkdown,
   'Year end Adjustment and Financial Report Preparation': yearEndAdjustmentMarkdown
