@@ -43,6 +43,58 @@ import seniorTaxFilingImage from '../assets/images/RoxanaSupplied/Senior (Over 6
 import uberTaxiDriverImage from '../assets/images/RoxanaSupplied/Uber or Taxi Driver.webp';
 import wsibClearanceImage from '../assets/images/RoxanaSupplied/WSIB Clearance.webp';
 
+// Import all markdown files
+import taxSlipsMarkdown from '../assets/docs/Tax Slips Preparation and Filing.md?raw';
+import businessIncomeMarkdown from '../assets/docs/Business Income Sole Proprietorship or Partnership.md?raw';
+import childTaxBenefitMarkdown from '../assets/docs/Child Tax Benefit Application.md?raw';
+import commissionIncomeMarkdown from '../assets/docs/Commission Income Tax Filing.md?raw';
+import newClientsConsultationMarkdown from '../assets/docs/Consultation - New Clients.md?raw';
+import reviewLettersConsultationMarkdown from '../assets/docs/Consultation on Review Letters received from Canada Revenue.md?raw';
+import corporateTaxConsultationMarkdown from '../assets/docs/Corporate Tax Consultation.md?raw';
+import corporateTaxPreparationMarkdown from '../assets/docs/Corporate Tax Preparation and filing.md?raw';
+import disabilityCreditMarkdown from '../assets/docs/Disability Credit Application.md?raw';
+import finalTaxReturnMarkdown from '../assets/docs/Final Tax return (Deceased).md?raw';
+import fullTimeStudentsMarkdown from '../assets/docs/Full Time Students Tax Filing.md?raw';
+import hstPreparationMarkdown from '../assets/docs/HST Preparation and Filing.md?raw';
+import maritalStatusChangeMarkdown from '../assets/docs/Marital Status change.md?raw';
+import monthlyBookkeepingMarkdown from '../assets/docs/Monthly Corporate Bookkeeping Services.md?raw';
+import monthlyPayrollMarkdown from '../assets/docs/Monthly Payroll.md?raw';
+import newComersMarkdown from '../assets/docs/New Comers Tax Filing.md?raw';
+import personalTaxFilingMarkdown from '../assets/docs/Personal Tax Filing.md?raw';
+import professionalIncomeMarkdown from '../assets/docs/Professional Income Tax.md?raw';
+import recordOfEmploymentMarkdown from '../assets/docs/Record of Employment Filing.md?raw';
+import rentalIncomeMarkdown from '../assets/docs/Rental Income for Sole Proprietorship_Partners Filing.md?raw';
+import seniorTaxFilingMarkdown from '../assets/docs/Senior (Over 65+) Tax Filing.md?raw';
+import uberTaxiDriverMarkdown from '../assets/docs/Uber or Taxi Driver.md?raw';
+import wsibClearanceMarkdown from '../assets/docs/WSIB Clearance.md?raw';
+
+// Map service titles to their markdown content
+const markdownMap = {
+  'Tax Slips Preparation and Filing': taxSlipsMarkdown,
+  'Business Income Sole Proprietorship or Partnership': businessIncomeMarkdown,
+  'Child Tax Benefit Application': childTaxBenefitMarkdown,
+  'Commission Income Tax Filing': commissionIncomeMarkdown,
+  'Consultation - New Clients': newClientsConsultationMarkdown,
+  'Consultation on Review Letters received from Canada Revenue': reviewLettersConsultationMarkdown,
+  'Corporate Tax Consultation': corporateTaxConsultationMarkdown,
+  'Corporate Tax Preparation and filing': corporateTaxPreparationMarkdown,
+  'Disability Credit Application': disabilityCreditMarkdown,
+  'Final Tax return (Deceased)': finalTaxReturnMarkdown,
+  'Full Time Students Tax Filing': fullTimeStudentsMarkdown,
+  'HST Preparation and Filing': hstPreparationMarkdown,
+  'Marital Status change': maritalStatusChangeMarkdown,
+  'Monthly Corporate Bookkeeping Services': monthlyBookkeepingMarkdown,
+  'Monthly Payroll': monthlyPayrollMarkdown,
+  'New Comers Tax Filing': newComersMarkdown,
+  'Personal Tax Filing': personalTaxFilingMarkdown,
+  'Professional Income Tax': professionalIncomeMarkdown,
+  'Record of Employment Filing': recordOfEmploymentMarkdown,
+  'Rental Income for Sole Proprietorship_Partners Filing': rentalIncomeMarkdown,
+  'Senior (Over 65+) Tax Filing': seniorTaxFilingMarkdown,
+  'Uber or Taxi Driver': uberTaxiDriverMarkdown,
+  'WSIB Clearance': wsibClearanceMarkdown
+};
+
 // Default image to use as fallback
 const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp';
 
@@ -510,16 +562,27 @@ const Services = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
-  // Function to fetch markdown content
-  const fetchMarkdownContent = async (filename) => {
-    try {
-      const response = await fetch(`${process.env.PUBLIC_URL}/assets/docs/${filename}`);
-      const markdownText = await response.text();
-      setMarkdownContent(markdownText);
-    } catch (error) {
-      console.error(`Failed to fetch markdown content for ${filename}:`, error);
-      setMarkdownContent('*Content could not be loaded. Please try again later.*');
-    }
+  // Function to handle requirements button click
+  const handleRequirementsClick = (service, event) => {
+    event.stopPropagation();
+    setMarkdownContent(markdownMap[service.title] || '*No requirements information available for this service.*');
+    setImagePopup({ 
+      open: true, 
+      image: service.image, 
+      title: service.title,
+      isSpecialService: true // Show markdown for all services
+    });
+  };
+
+  // Handle image popup open
+  const handleImagePopupOpen = (service, event) => {
+    event.stopPropagation();
+    setImagePopup({ 
+      open: true, 
+      image: service.image, 
+      title: service.title,
+      isSpecialService: false // Just show the image, not markdown
+    });
   };
 
   // Handle booking button click
@@ -540,35 +603,9 @@ const Services = () => {
     setActiveCategory(category);
   };
 
-  // Handle image popup open
-  const handleImagePopupOpen = (service, event) => {
-    event.stopPropagation();
-    const isSpecialService = service.title === 'Tax Slips Preparation and Filing';
-    
-    setImagePopup({ 
-      open: true, 
-      image: service.image, 
-      title: service.title,
-      isSpecialService
-    });
-    
-    // If it's the special service, fetch the markdown content
-    if (isSpecialService) {
-      fetchMarkdownContent('Tax Slips Preparation and Filing.md');
-    }
-  };
-  
   // Handle image popup close
   const handleImagePopupClose = () => {
     setImagePopup({ open: false, image: null, title: null, isSpecialService: false });
-  };
-
-  // Handle requirements button click
-  const handleRequirementsOpen = (service, event) => {
-    // Prevent the click from propagating to parent elements
-    event.stopPropagation();
-    setSelectedRequirements(service);
-    setRequirementsModalOpen(true);
   };
 
   // Handle requirements modal close
@@ -769,7 +806,7 @@ const Services = () => {
                         <Button
                           variant="contained"
                           size="small"
-                          onClick={(e) => handleRequirementsOpen(service, e)}
+                          onClick={(e) => handleRequirementsClick(service, e)}
                           sx={{
                             backgroundColor: 'red',
                             color: 'yellow',
