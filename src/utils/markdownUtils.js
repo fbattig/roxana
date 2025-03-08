@@ -9,7 +9,8 @@
  */
 export const fetchMarkdownContent = async (filename) => {
   try {
-    const response = await fetch(`/src/assets/images/documents/${filename}`);
+    // Use the correct path to markdown files in src/assets/images/documents
+    const response = await fetch(`/assets/images/documents/${filename}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch markdown content: ${response.statusText}`);
     }
@@ -27,6 +28,9 @@ export const fetchMarkdownContent = async (filename) => {
  * @returns {string|null} - The markdown filename or null if no mapping exists
  */
 export const getMarkdownFileForService = (serviceTitle, language = 'en') => {
+  // Log the service title for debugging
+  console.log('Getting markdown file for service:', serviceTitle);
+  
   const serviceMap = {
     'Tax Preparation': {
       en: 'Personal_Tax_Declaration_en.MD',
@@ -37,8 +41,12 @@ export const getMarkdownFileForService = (serviceTitle, language = 'en') => {
       es: 'SmallBiz_Inde_Pro_Taxes_es.MD'
     },
     'Bookkeeping': {
-      en: 'SmallBiz_Inde_Pro_Taxes_en.MD',
+      en: 'Bookkeeping_Information_en.MD',
       es: 'SmallBiz_Inde_Pro_Taxes_es.MD'
+    },
+    'Bookkeeping Information': {
+      en: 'Bookkeeping_Information_en.MD',
+      es: 'Bookkeeping_Information_es.MD'
     },
     'Financial Planning': {
       en: 'SmallBiz_Inde_Pro_Taxes_en.MD',
@@ -47,7 +55,12 @@ export const getMarkdownFileForService = (serviceTitle, language = 'en') => {
   };
 
   const service = serviceMap[serviceTitle];
-  if (!service) return null;
+  if (!service) {
+    console.warn(`No markdown mapping found for service: "${serviceTitle}"`);
+    return null;
+  }
   
-  return service[language] || service['en']; // Fallback to English if language not available
+  const result = service[language] || service['en']; // Fallback to English if language not available
+  console.log(`Mapped "${serviceTitle}" to file: ${result}`);
+  return result;
 };

@@ -113,6 +113,8 @@ const Account = () => {
 
   // If user is logged in, show user profile
   if (currentUser) {
+    console.log('Current user in Account component:', currentUser);
+    
     return (
       <Container maxWidth="md" id="account">
         <Box sx={{ py: 8 }}>
@@ -122,14 +124,20 @@ const Account = () => {
             </Typography>
             
             <Box sx={{ mt: 4 }}>
-              <Typography variant="h6" gutterBottom>
-                Welcome, {currentUser.first_name}!
-              </Typography>
+              {currentUser.firstName && currentUser.lastName ? (
+                <Typography variant="h6" gutterBottom>
+                  Welcome, {currentUser.firstName} {currentUser.lastName}!
+                </Typography>
+              ) : (
+                <Typography variant="h6" gutterBottom>
+                  Welcome!
+                </Typography>
+              )}
               
               <Grid container spacing={3} sx={{ mt: 2 }}>
                 <Grid item xs={12} md={6}>
                   <Typography variant="body1">
-                    <strong>Name:</strong> {currentUser.first_name} {currentUser.last_name}
+                    <strong>Name:</strong> {currentUser.firstName || ''} {currentUser.lastName || ''}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -159,11 +167,22 @@ const Account = () => {
                   onClick={handleLogout}
                   sx={{ borderRadius: 2 }}
                 >
-                  Logout
+                  LOGOUT
                 </Button>
               </Box>
             </Box>
           </Paper>
+        </Box>
+      </Container>
+    );
+  }
+
+  // Show loading indicator while authentication state is being determined
+  if (loading) {
+    return (
+      <Container maxWidth="md" id="account">
+        <Box sx={{ py: 8, display: 'flex', justifyContent: 'center' }}>
+          <CircularProgress />
         </Box>
       </Container>
     );

@@ -30,7 +30,8 @@ const BookingModal = ({ open, onClose, service }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: ''
+    phone: '',
+    message: ''
   });
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({
@@ -46,9 +47,10 @@ const BookingModal = ({ open, onClose, service }) => {
   useEffect(() => {
     if (currentUser) {
       setFormData({
-        name: `${currentUser.first_name} ${currentUser.last_name}`,
+        name: `${currentUser.firstName} ${currentUser.lastName}`,
         email: currentUser.email,
-        phone: currentUser.phone || ''
+        phone: currentUser.phone || '',
+        message: ''
       });
     }
   }, [currentUser]);
@@ -64,13 +66,27 @@ const BookingModal = ({ open, onClose, service }) => {
     setSelectedTime(null);
     setLoading(true);
     
-    const formattedDate = format(date, 'yyyy-MM-dd');
+    // Create a date string that's not affected by timezone
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
     
     // Get available time slots for selected date
-    getAvailableTimeSlots(formattedDate).then((slots) => {
-      setAvailableTimeSlots(slots);
-      setLoading(false);
-    });
+    getAvailableTimeSlots(formattedDate)
+      .then((slots) => {
+        setAvailableTimeSlots(slots);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error("Error loading time slots:", error);
+        setSnackbar({
+          open: true,
+          message: 'Failed to load available time slots. Please try again.',
+          severity: 'error'
+        });
+        setLoading(false);
+      });
   };
 
   // Handle time selection
@@ -152,15 +168,24 @@ const BookingModal = ({ open, onClose, service }) => {
   const handleBookAppointment = () => {
     setLoading(true);
     
+    // Get the current user from auth context
+    const user = currentUser || { id: 1 }; // Fallback to a default ID if not logged in
+    
+    // Create a date string that's not affected by timezone
+    const year = selectedDate.getFullYear();
+    const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+    const day = String(selectedDate.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    
     const appointmentData = {
+      userId: user.id,
       serviceId: service.id,
-      serviceTitle: service.title,
-      clientName: formData.name,
-      clientEmail: formData.email,
-      clientPhone: formData.phone,
-      appointmentDate: format(selectedDate, 'yyyy-MM-dd'),
-      appointmentTime: selectedTime
+      appointmentDate: formattedDate,
+      appointmentTime: selectedTime,
+      notes: formData.message || ''
     };
+    
+    console.log('Sending appointment data:', appointmentData);
     
     createAppointment(appointmentData).then(() => {
       setLoading(false);
@@ -182,9 +207,10 @@ const BookingModal = ({ open, onClose, service }) => {
     setSelectedDate(null);
     setSelectedTime(null);
     setFormData({
-      name: currentUser ? `${currentUser.first_name} ${currentUser.last_name}` : '',
+      name: currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : '',
       email: currentUser ? currentUser.email : '',
-      phone: currentUser ? (currentUser.phone || '') : ''
+      phone: currentUser ? (currentUser.phone || '') : '',
+      message: ''
     });
     setErrors({});
     onClose();
@@ -216,7 +242,7 @@ const BookingModal = ({ open, onClose, service }) => {
         <DialogTitle sx={{ borderBottom: '1px solid #eee', pb: 2, pt: 3 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Box component="h5" variant="h5" fontWeight="bold" sx={{ fontSize: '24px', mb: 1 }}>
+              <Box component="h5" variant="h5" fontWeight="bold" sx={{ fontSize: '24px', mb: 2 }}>
                 Account Required
               </Box>
             </Box>
@@ -275,7 +301,7 @@ const BookingModal = ({ open, onClose, service }) => {
         <DialogTitle sx={{ borderBottom: '1px solid #eee', pb: 2, pt: 3 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Box component="h5" variant="h5" fontWeight="bold" sx={{ fontSize: '24px', mb: 1 }}>
+              <Box component="h5" variant="h5" fontWeight="bold" sx={{ fontSize: '24px', mb: 2 }}>
                 Book Appointment: {service?.title}
               </Box>
               <Box component="p" variant="subtitle1" color="text.secondary">
@@ -289,14 +315,14 @@ const BookingModal = ({ open, onClose, service }) => {
           {loading && step === 3 ? (
             <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="300px">
               <CircularProgress size={60} />
-              <Box component="h6" variant="h6" sx={{ mt: 2 }}>
+              <Box component="h6" variant="h6" sx={{ mt: 2, mb: 2 }}>
                 Booking your appointment...
               </Box>
             </Box>
           ) : step === 3 ? (
             <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="300px">
               <Box sx={{ textAlign: 'center', mb: 3 }}>
-                <Box component="h5" variant="h5" gutterBottom>
+                <Box component="h5" variant="h5" sx={{ mb: 2 }}>
                   Appointment Confirmed!
                 </Box>
                 <Box component="p" variant="body1">
@@ -316,7 +342,7 @@ const BookingModal = ({ open, onClose, service }) => {
             <Grid container spacing={3}>
               <Grid item xs={12} md={7}>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Box component="h6" variant="h6" gutterBottom>
+                  <Box component="h6" variant="h6" sx={{ mb: 2 }}>
                     Select a Date
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
@@ -378,7 +404,7 @@ const BookingModal = ({ open, onClose, service }) => {
               
               <Grid item xs={12} md={5}>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Box component="h6" variant="h6" gutterBottom>
+                  <Box component="h6" variant="h6" sx={{ mb: 2 }}>
                     Select a Time
                   </Box>
                   {loading ? (
@@ -437,7 +463,7 @@ const BookingModal = ({ open, onClose, service }) => {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Box component="h6" variant="h6" gutterBottom>
+                  <Box component="h6" variant="h6" sx={{ mb: 2 }}>
                     Your Information
                   </Box>
                 </Box>
@@ -481,8 +507,18 @@ const BookingModal = ({ open, onClose, service }) => {
               </Grid>
               
               <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              
+              <Grid item xs={12}>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Box component="h6" variant="h6" gutterBottom sx={{ mt: 2 }}>
+                  <Box component="h6" variant="h6" sx={{ mt: 2, mb: 2 }}>
                     Appointment Details
                   </Box>
                   <Box component="p" variant="body1" sx={{ mb: 1 }}>

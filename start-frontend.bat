@@ -1,0 +1,3 @@
+@echo off
+echo Starting Roxana Frontend on a single port...
+npm run dev

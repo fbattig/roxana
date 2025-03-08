@@ -1,6 +1,3 @@
-
-
-```md
 # Personal Tax Return  
 
 **Time:** 4 to 5 hours  
@@ -59,5 +56,5 @@ All tax-related forms registered with the **CRA** must be emailed **at least 12 
 ### 11. Work Tools Expenses  
 - If you are an apprentice in **plumbing, transportation, electrical work, etc.,** you need:  
   - A **signed Form 777** from your employer listing purchased and employer-approved tools.  
-```
+
 

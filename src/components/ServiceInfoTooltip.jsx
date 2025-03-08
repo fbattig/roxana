@@ -63,7 +63,19 @@ const ServiceInfoTooltip = ({ serviceTitle, children }) => {
   return (
     <>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        {children}
+        <Typography 
+          component="span" 
+          sx={{ 
+            cursor: 'pointer', 
+            '&:hover': { 
+              textDecoration: 'underline',
+              color: 'primary.main'
+            } 
+          }}
+          onClick={handlePopupOpen}
+        >
+          {children}
+        </Typography>
         <Tooltip
           title={<TooltipContent />}
           open={tooltipOpen}

@@ -15,13 +15,16 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import { motion } from 'framer-motion';
 import BookingModal from './BookingModal';
 
+// Default image to use as fallback
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp';
+
 const mainServices = [
   {
     id: 1,
     title: 'Tax Slips Preparation and Filing',
     description: 'Professional preparation and filing of your tax slips to ensure compliance and maximize returns.',
     icon: <CalculateIcon sx={{ fontSize: 48 }} />,
-    image: '/images/services/T4 form.png',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '3 hrs',
     price: '$465',
     delay: 0,
@@ -32,7 +35,7 @@ const mainServices = [
     title: 'Federal Corporation New Registration',
     description: 'Complete registration service for new federal corporations, ensuring all legal requirements are met.',
     icon: <ReceiptIcon sx={{ fontSize: 48 }} />,
-    image: '/images/services/federal.webp',
+    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '10 hrs 50 mins',
     price: '$1,150',
     delay: 0.2,
@@ -43,7 +46,7 @@ const mainServices = [
     title: 'Business Income Sole Proprietorship or Partnership',
     description: 'Comprehensive income tax preparation for sole proprietorships and partnerships.',
     icon: <BusinessIcon sx={{ fontSize: 48 }} />,
-    image: '/images/services/startup.webp',
+    image: 'https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '5 hrs',
     price: '$550',
     delay: 0.4,
@@ -54,7 +57,7 @@ const mainServices = [
     title: 'Bookkeeping Services',
     description: 'Monthly reconciliation of accounts, transaction tracking, and financial record maintenance.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
-    image: '/images/services/bookkeeping.webp',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '4 hrs',
     price: '$400',
     delay: 0.6,
@@ -65,7 +68,7 @@ const mainServices = [
     title: 'Payroll Services',
     description: 'Complete payroll management including reports, remittances, and tax payments to CRA.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
-    image: '/images/services/payroll.webp',
+    image: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '3 hrs',
     price: '$350',
     delay: 0.8,
@@ -76,7 +79,7 @@ const mainServices = [
     title: 'Auditing Services',
     description: 'Through analyzing procedures and documentation, we provide accurate and reliable financial decisions.',
     icon: <AccountBalanceIcon sx={{ fontSize: 48 }} />,
-    image: '/images/services/audit.webp',
+    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '6 hrs',
     price: '$750',
     delay: 1.0,
@@ -98,7 +101,7 @@ const mainServices = [
     title: 'Corporate Tax Return',
     description: 'Preparation and filing of corporate tax returns for businesses of all sizes.',
     icon: <BusinessIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '8 hrs',
     price: '$950',
     delay: 0.4,
@@ -109,7 +112,7 @@ const mainServices = [
     title: 'Tax Planning Consultation',
     description: 'Strategic tax planning advice to minimize tax liability and maximize savings.',
     icon: <AssignmentIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '2 hrs',
     price: '$300',
     delay: 0.6,
@@ -120,7 +123,7 @@ const mainServices = [
     title: 'Business Registration',
     description: 'Complete business registration services for new businesses.',
     icon: <DescriptionIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '4 hrs',
     price: '$500',
     delay: 0.8,
@@ -131,7 +134,7 @@ const mainServices = [
     title: 'Financial Statement Preparation',
     description: 'Preparation of financial statements for businesses and organizations.',
     icon: <AssessmentIcon sx={{ fontSize: 48 }} />,
-    image: '/images/services/financial-statement.webp',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '6 hrs',
     price: '$700',
     delay: 1.0,
@@ -142,7 +145,7 @@ const mainServices = [
     title: 'GST/HST Filing',
     description: 'Preparation and filing of GST/HST returns for businesses.',
     icon: <AttachMoneyIcon sx={{ fontSize: 48 }} />,
-    image: '/images/services/quality.webp',
+    image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '2 hrs',
     price: '$200',
     delay: 0.2,
@@ -153,7 +156,7 @@ const mainServices = [
     title: 'Retirement Planning',
     description: 'Comprehensive retirement planning services to ensure financial security.',
     icon: <AccountBalanceWalletIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '3 hrs',
     price: '$400',
     delay: 0.4,
@@ -164,7 +167,7 @@ const mainServices = [
     title: 'Estate Planning',
     description: 'Estate planning services to protect assets and minimize tax implications.',
     icon: <DescriptionIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '4 hrs',
     price: '$600',
     delay: 0.6,
@@ -175,7 +178,7 @@ const mainServices = [
     title: 'Investment Consultation',
     description: 'Expert advice on investment strategies to maximize returns.',
     icon: <MonetizationOnIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '2 hrs',
     price: '$350',
     delay: 0.8,
@@ -186,7 +189,7 @@ const mainServices = [
     title: 'Business Valuation',
     description: 'Professional valuation of businesses for sale, purchase, or other purposes.',
     icon: <BusinessIcon sx={{ fontSize: 48 }} />,
-    image: '/images/services/business-valuation.webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '8 hrs',
     price: '$1,200',
     delay: 1.0,
@@ -197,7 +200,7 @@ const mainServices = [
     title: 'Quarterly Tax Payments',
     description: 'Management and filing of quarterly tax payments for businesses.',
     icon: <PaymentsIcon sx={{ fontSize: 48 }} />,
-    image: '/images/services/affordable.webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '2 hrs',
     price: '$250',
     delay: 0.2,
@@ -208,7 +211,7 @@ const mainServices = [
     title: 'Financial Forecasting',
     description: 'Development of financial forecasts and projections for businesses.',
     icon: <AssessmentIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '5 hrs',
     price: '$650',
     delay: 0.4,
@@ -219,7 +222,7 @@ const mainServices = [
     title: 'Non-Profit Tax Filing',
     description: 'Specialized tax filing services for non-profit organizations.',
     icon: <ReceiptIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1560520031-3a4dc4e9de0c?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '6 hrs',
     price: '$700',
     delay: 0.6,
@@ -230,7 +233,7 @@ const mainServices = [
     title: 'Tax Audit Representation',
     description: 'Professional representation during tax audits by government agencies.',
     icon: <AccountBalanceIcon sx={{ fontSize: 48 }} />,
-    image: '/images/services/security.webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '10 hrs',
     price: '$1,500',
     delay: 0.8,
@@ -241,7 +244,7 @@ const mainServices = [
     title: 'Cash Flow Management',
     description: 'Strategies and services to optimize cash flow for businesses.',
     icon: <AttachMoneyIcon sx={{ fontSize: 48 }} />,
-    image: '/images/services/cash-flow.webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '3 hrs',
     price: '$450',
     delay: 1.0,
@@ -252,7 +255,7 @@ const mainServices = [
     title: 'Tax Deduction Planning',
     description: 'Strategic planning to maximize tax deductions for individuals and businesses.',
     icon: <CalculateIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1563237023-b1e970526dcb?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '2 hrs',
     price: '$300',
     delay: 0.2,
@@ -263,7 +266,7 @@ const mainServices = [
     title: 'International Tax Services',
     description: 'Specialized tax services for individuals and businesses with international operations.',
     icon: <BusinessIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '8 hrs',
     price: '$1,200',
     delay: 0.4,
@@ -274,7 +277,7 @@ const mainServices = [
     title: 'Financial Software Setup',
     description: 'Installation and configuration of financial software for businesses.',
     icon: <BookIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '5 hrs',
     price: '$600',
     delay: 0.6,
@@ -285,7 +288,7 @@ const mainServices = [
     title: 'Business Restructuring',
     description: 'Professional services for businesses undergoing restructuring or reorganization.',
     icon: <BusinessIcon sx={{ fontSize: 48 }} />,
-    image: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     time: '12 hrs',
     price: '$1,800',
     delay: 0.8,
@@ -305,19 +308,19 @@ const features = [
   {
     title: 'Quality Assurance',
     description: 'Our team ensures accurate and reliable financial reporting.',
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     delay: 0
   },
   {
     title: 'Affordability',
     description: 'Competitive pricing without compromising on service quality.',
-    image: 'https://images.unsplash.com/photo-1520333789090-1afc82db536a?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     delay: 0.2
   },
   {
     title: 'Security Guaranteed',
     description: 'Your financial data is protected with industry-standard security.',
-    image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
+    image: 'https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?ixlib=rb-4.0.3&w=1920&q=80&fm=webp',
     delay: 0.4
   }
 ];
@@ -446,14 +449,21 @@ const Services = () => {
                         '&:hover img': {
                           transform: 'scale(1.05)'
                         },
-                        cursor: service.image === '/images/services/T4 form.png' ? 'pointer' : 'default',
+                        cursor: service.image === 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp' ? 'pointer' : 'default',
                         backgroundColor: 'rgba(245, 245, 245, 0.5)',
                         padding: 2
                       }}
-                      onMouseEnter={() => service.image === '/images/services/T4 form.png' ? setHoveredImage(service.image) : null}
-                      onMouseLeave={() => service.image === '/images/services/T4 form.png' ? setHoveredImage(null) : null}
+                      onMouseEnter={() => service.image === 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp' ? setHoveredImage(service.image) : null}
+                      onMouseLeave={() => service.image === 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&w=1920&q=80&fm=webp' ? setHoveredImage(null) : null}
                     >
-                      <img src={service.image} alt={service.title} />
+                      <img 
+                        src={service.image} 
+                        alt={service.title} 
+                        onError={(e) => {
+                          console.log(`Failed to load image: ${service.image}`);
+                          e.target.src = DEFAULT_IMAGE;
+                        }}
+                      />
                     </Box>
                     <CardContent sx={{ flexGrow: 1, p: 2 }}>
                       <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600, mb: 1 }}>

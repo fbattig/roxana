@@ -203,12 +203,12 @@ const Bookings = () => {
                 {bookings.map((booking) => (
                   <TableRow key={booking.id}>
                     <TableCell>
-                      <ServiceInfoTooltip serviceTitle={booking.service_title}>
-                        {booking.service_title}
+                      <ServiceInfoTooltip serviceTitle={booking.serviceName || 'Unknown Service'}>
+                        {booking.serviceName || 'Unknown Service'}
                       </ServiceInfoTooltip>
                     </TableCell>
-                    <TableCell>{formatDate(booking.appointment_date)}</TableCell>
-                    <TableCell>{booking.appointment_time}</TableCell>
+                    <TableCell>{booking.appointmentDate ? formatDate(booking.appointmentDate) : 'Invalid Date'}</TableCell>
+                    <TableCell>{booking.appointmentTime || 'Not specified'}</TableCell>
                     <TableCell>
                       <Typography sx={{ color: getStatusColor(booking.status), fontWeight: 500 }}>
                         {booking.status ? booking.status.charAt(0).toUpperCase() + booking.status.slice(1) : 'Unknown'}
@@ -247,13 +247,13 @@ const Bookings = () => {
           {selectedBooking && (
             <Box sx={{ mt: 2 }}>
               <Typography variant="body2">
-                <strong>Service:</strong> {selectedBooking.service_title}
+                <strong>Service:</strong> {selectedBooking.serviceName || 'Unknown Service'}
               </Typography>
               <Typography variant="body2">
-                <strong>Date:</strong> {formatDate(selectedBooking.appointment_date)}
+                <strong>Date:</strong> {selectedBooking.appointmentDate ? formatDate(selectedBooking.appointmentDate) : 'Invalid Date'}
               </Typography>
               <Typography variant="body2">
-                <strong>Time:</strong> {selectedBooking.appointment_time}
+                <strong>Time:</strong> {selectedBooking.appointmentTime || 'Not specified'}
               </Typography>
             </Box>
           )}

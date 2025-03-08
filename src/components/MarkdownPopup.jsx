@@ -24,14 +24,17 @@ const MarkdownPopup = ({ open, onClose, markdownFile, title }) => {
       setLoading(true);
       setError('');
       
+      console.log(`MarkdownPopup: Attempting to load file: ${markdownFile}`);
+      
       fetchMarkdownContent(markdownFile)
         .then(text => {
+          console.log(`MarkdownPopup: Successfully loaded file: ${markdownFile} (${text.length} characters)`);
           setContent(text);
           setLoading(false);
         })
         .catch(err => {
-          console.error('Error loading markdown:', err);
-          setError('Failed to load document. Please try again later.');
+          console.error(`MarkdownPopup: Error loading markdown file: ${markdownFile}`, err);
+          setError(`Failed to load document: ${markdownFile}. Please try again later.`);
           setLoading(false);
         });
     }
