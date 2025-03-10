@@ -14,7 +14,10 @@ export default defineConfig({
         secure: false, // Needed for self-signed certificates
         rewrite: (path) => path
       }
-    }
+    },
+    port: 5173,
+    strictPort: false,
+    host: true
   },
   resolve: {
     alias: {

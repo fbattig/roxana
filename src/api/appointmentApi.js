@@ -91,15 +91,15 @@ const saveAppointments = (appointments) => {
 // Create a new appointment
 export const createAppointment = async (appointmentData) => {
   try {
-    console.log(`Sending appointment to ${API_URL}/appointments`);
+    console.log(`Sending appointment to ${API_URL}/Appointments`);
     
     // Get the current user
     const currentUser = getCurrentUser();
     
-    // Format the data according to what the ASP.NET Core backend expects
+    // Format the data for the API
     const formattedData = {
       UserId: currentUser.id,
-      ServiceId: appointmentData.serviceId,
+      ServiceId: parseInt(appointmentData.serviceId, 10) || 1, // Convert to integer, default to 1 if invalid
       AppointmentDate: appointmentData.appointmentDate,
       AppointmentTime: appointmentData.appointmentTime,
       Notes: appointmentData.notes || '',
@@ -113,8 +113,8 @@ export const createAppointment = async (appointmentData) => {
     let serverError = null;
     
     try {
-      // Add to server
-      const response = await fetch(`${API_URL}/appointments`, {
+      // Add to server - use direct URL for troubleshooting
+      const response = await fetch(`${API_URL}/Appointments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -207,7 +207,7 @@ export const getAvailableTimeSlots = async (date) => {
     const localBookedTimeSlots = localAppointments.map(appointment => appointment.appointmentTime || appointment.time);
     
     // Get appointments from server for this date
-    const response = await fetch(`${API_URL}/appointments?date=${date}`, {
+    const response = await fetch(`${API_URL}/Appointments?date=${date}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

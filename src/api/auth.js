@@ -154,3 +154,177 @@ export const getCurrentUser = () => {
     return null;
   }
 };
+
+/**
+ * Get user's services
+ * @param {number} userId - User ID
+ * @returns {Promise<Object>} - Response from the server with services data
+ */
+export const getUserServices = async (userId) => {
+  try {
+    console.log(`Fetching services for user ${userId} from ${API_URL}/users/${userId}/services`);
+    
+    const response = await fetch(`${API_URL}/users/${userId}/services`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      credentials: 'include' // Include cookies for authentication
+    });
+    
+    console.log('Services response status:', response.status);
+    
+    // Try to parse the response as JSON
+    let data;
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+      console.log('Services response data:', data);
+    } else {
+      const text = await response.text();
+      console.log('Services response text:', text);
+      throw new Error('Invalid response format');
+    }
+    
+    if (!response.ok) {
+      throw new Error(data.error || data.message || `Failed to fetch services (Status: ${response.status})`);
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('Fetch services error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get user's appointments directly from the UsersController
+ * @param {number} userId - User ID
+ * @returns {Promise<Object>} - Response from the server with appointments data
+ */
+export const getUserAppointmentsFromUser = async (userId) => {
+  try {
+    console.log(`Fetching appointments for user ${userId} from ${API_URL}/users/${userId}/appointments`);
+    
+    const response = await fetch(`${API_URL}/users/${userId}/appointments`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      credentials: 'include' // Include cookies for authentication
+    });
+    
+    console.log('Appointments response status:', response.status);
+    
+    // Try to parse the response as JSON
+    let data;
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+      console.log('Appointments response data:', data);
+      
+      // Process the data to ensure it's in the expected format
+      if (data && Array.isArray(data)) {
+        // If the response is an array, it's likely the appointments array directly
+        // Process each appointment to extract service information
+        const processedAppointments = data.map(appointment => {
+          // If service is an object, extract the name/title
+          if (appointment.service && typeof appointment.service === 'object') {
+            return {
+              ...appointment,
+              serviceName: appointment.service.title || appointment.service.name || 'Unknown Service',
+              serviceId: appointment.service.id
+            };
+          }
+          return appointment;
+        });
+        
+        return {
+          success: true,
+          appointments: processedAppointments
+        };
+      } else if (data && data.appointments && Array.isArray(data.appointments)) {
+        // If the response has an appointments property that's an array
+        // Process each appointment to extract service information
+        const processedAppointments = data.appointments.map(appointment => {
+          // If service is an object, extract the name/title
+          if (appointment.service && typeof appointment.service === 'object') {
+            return {
+              ...appointment,
+              serviceName: appointment.service.title || appointment.service.name || 'Unknown Service',
+              serviceId: appointment.service.id
+            };
+          }
+          return appointment;
+        });
+        
+        return {
+          success: true,
+          appointments: processedAppointments,
+          message: data.message
+        };
+      } else if (data && data.data && Array.isArray(data.data)) {
+        // Some APIs nest the data under a 'data' property
+        // Process each appointment to extract service information
+        const processedAppointments = data.data.map(appointment => {
+          // If service is an object, extract the name/title
+          if (appointment.service && typeof appointment.service === 'object') {
+            return {
+              ...appointment,
+              serviceName: appointment.service.title || appointment.service.name || 'Unknown Service',
+              serviceId: appointment.service.id
+            };
+          }
+          return appointment;
+        });
+        
+        return {
+          success: true,
+          appointments: processedAppointments,
+          message: data.message
+        };
+      } else if (data && typeof data === 'object') {
+        // If it's an object but not in the expected format, try to extract appointments
+        const possibleAppointments = Object.values(data).find(val => Array.isArray(val));
+        if (possibleAppointments) {
+          // Process each appointment to extract service information
+          const processedAppointments = possibleAppointments.map(appointment => {
+            // If service is an object, extract the name/title
+            if (appointment.service && typeof appointment.service === 'object') {
+              return {
+                ...appointment,
+                serviceName: appointment.service.title || appointment.service.name || 'Unknown Service',
+                serviceId: appointment.service.id
+              };
+            }
+            return appointment;
+          });
+          
+          return {
+            success: true,
+            appointments: processedAppointments,
+            message: 'Appointments extracted from response'
+          };
+        }
+      }
+      
+      // If we couldn't identify the appointments array, return the data as is
+      return data;
+    } else {
+      const text = await response.text();
+      console.log('Appointments response text:', text);
+      throw new Error('Invalid response format');
+    }
+    
+    if (!response.ok) {
+      throw new Error(data.error || data.message || `Failed to fetch appointments (Status: ${response.status})`);
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('Fetch appointments error:', error);
+    throw error;
+  }
+};

@@ -28,6 +28,12 @@ export const fetchMarkdownContent = async (filename) => {
  * @returns {string|null} - The markdown filename or null if no mapping exists
  */
 export const getMarkdownFileForService = (serviceTitle, language = 'en') => {
+  // Check if serviceTitle is valid
+  if (!serviceTitle || typeof serviceTitle !== 'string') {
+    console.warn('Invalid service title provided:', serviceTitle);
+    return null;
+  }
+  
   // Log the service title for debugging
   console.log('Getting markdown file for service:', serviceTitle);
   
@@ -49,18 +55,33 @@ export const getMarkdownFileForService = (serviceTitle, language = 'en') => {
       es: 'Bookkeeping_Information_es.MD'
     },
     'Financial Planning': {
+      en: 'Financial_Planning_en.MD',
+      es: 'Financial_Planning_es.MD'
+    },
+    'Personal Tax Declaration': {
+      en: 'Personal_Tax_Declaration_en.MD',
+      es: 'personal_Tax_declaration_es.MD'
+    },
+    'Personal Tax Return': {
+      en: 'Personal_Tax_Declaration_en.MD',
+      es: 'personal_Tax_declaration_es.MD'
+    },
+    'Small Business Taxes': {
       en: 'SmallBiz_Inde_Pro_Taxes_en.MD',
       es: 'SmallBiz_Inde_Pro_Taxes_es.MD'
+    },
+    'Tax Planning': {
+      en: 'Financial_Planning_en.MD',
+      es: 'Financial_Planning_es.MD'
     }
   };
 
-  const service = serviceMap[serviceTitle];
-  if (!service) {
+  // Check if the service exists in our map
+  if (!serviceMap[serviceTitle]) {
     console.warn(`No markdown mapping found for service: "${serviceTitle}"`);
     return null;
   }
-  
-  const result = service[language] || service['en']; // Fallback to English if language not available
-  console.log(`Mapped "${serviceTitle}" to file: ${result}`);
-  return result;
+
+  // Return the appropriate language version
+  return serviceMap[serviceTitle][language] || serviceMap[serviceTitle]['en'];
 };

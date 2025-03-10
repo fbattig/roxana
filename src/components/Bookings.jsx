@@ -18,21 +18,61 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Snackbar
+  Snackbar,
+  Chip
 } from '@mui/material';
 import { useAuth } from '../utils/AuthContext';
 import { getUserAppointments, cancelAppointment } from '../api/bookings';
 import ServiceInfoTooltip from './ServiceInfoTooltip';
 
 const formatDate = (dateString) => {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  return new Date(dateString).toLocaleDateString(undefined, options);
+  if (!dateString) return 'Invalid Date';
+  
+  try {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  } catch (error) {
+    console.error('Error formatting date:', error, dateString);
+    return 'Invalid Date';
+  }
+};
+
+// Helper function to map appointment data from backend format to frontend format
+const mapAppointmentData = (appointment) => {
+  // Check if the appointment is already in the correct format
+  if (appointment.service && typeof appointment.service === 'string' && appointment.date && appointment.time) {
+    return appointment;
+  }
+  
+  // Extract service name from service object if it exists
+  let serviceName = 'Unknown Service';
+  if (appointment.service && typeof appointment.service === 'object') {
+    serviceName = appointment.service.title || appointment.service.name || 'Unknown Service';
+  } else if (appointment.serviceName) {
+    serviceName = appointment.serviceName;
+  } else if (appointment.ServiceName) {
+    serviceName = appointment.ServiceName;
+  }
+  
+  // Map from backend format (camelCase or PascalCase) to frontend format
+  return {
+    id: appointment.id || appointment.appointmentId || appointment.Id || appointment.AppointmentId,
+    service: serviceName,
+    date: appointment.appointmentDate || appointment.AppointmentDate || appointment.date || appointment.Date,
+    time: appointment.appointmentTime || appointment.AppointmentTime || appointment.time || appointment.Time,
+    status: appointment.status || appointment.Status || 'pending',
+    serviceId: appointment.serviceId || appointment.ServiceId || (appointment.service && appointment.service.id),
+    notes: appointment.notes || appointment.Notes || appointment.message || appointment.Message,
+    // Only include non-object properties to avoid rendering issues
+    // Don't spread the entire appointment object to avoid including complex nested objects
+  };
 };
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isDemoMode, setIsDemoMode] = useState(false);
   const { currentUser } = useAuth();
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -48,35 +88,36 @@ const Bookings = () => {
       console.log('Fetching bookings for user:', currentUser.id);
       const data = await getUserAppointments(currentUser.id);
       
-      console.log('Bookings response:', data);
-      
-      if (data.success) {
-        setBookings(data.appointments);
-        console.log('Bookings set:', data.appointments.length);
-        
-        // If there's a message about using local data, show it as a warning
-        if (data.message && data.message.includes('local data')) {
-          setError(data.message);
-        }
+      if (data && Array.isArray(data.appointments)) {
+        console.log('Received appointments:', data.appointments);
+        // Map each appointment to ensure correct format
+        const mappedAppointments = data.appointments.map(mapAppointmentData);
+        setBookings(mappedAppointments);
+      } else if (data && Array.isArray(data)) {
+        console.log('Received appointments array:', data);
+        // Map each appointment to ensure correct format
+        const mappedAppointments = data.map(mapAppointmentData);
+        setBookings(mappedAppointments);
       } else {
-        setError(data.message || 'Failed to fetch bookings');
-        console.error('Failed to fetch bookings:', data.message);
+        console.error('Unexpected data format:', data);
+        setBookings([]);
+        setError('Unexpected data format received from server');
       }
+      
+      // Check if we're in demo mode
+      setIsDemoMode(data.isDemoMode || data.message?.includes('demo') || false);
+      
     } catch (err) {
       console.error('Error fetching bookings:', err);
-      setError('Failed to connect to the server. Please try again later.');
+      setError('Failed to load your bookings. Please try again later.');
+      setBookings([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (currentUser) {
-      fetchBookings();
-    } else {
-      setLoading(false);
-      setBookings([]);
-    }
+    fetchBookings();
   }, [currentUser]);
 
   const handleCancelClick = (booking) => {
@@ -84,38 +125,36 @@ const Bookings = () => {
     setCancelDialogOpen(true);
   };
 
+  const handleCancelDialogClose = () => {
+    setCancelDialogOpen(false);
+  };
+
   const handleCancelConfirm = async () => {
     if (!selectedBooking) return;
     
     setCancelLoading(true);
     try {
-      const data = await cancelAppointment(selectedBooking.id, currentUser.id);
+      await cancelAppointment(selectedBooking.id, currentUser.id);
       
-      if (data.success) {
-        setSnackbar({
-          open: true,
-          message: data.message || 'Appointment cancelled successfully',
-          severity: data.serverSuccess === false ? 'warning' : 'success'
-        });
-        
-        // Update the booking status in the list
-        setBookings(bookings.map(booking => 
+      // Update the local state to reflect the cancellation
+      setBookings(prevBookings => 
+        prevBookings.map(booking => 
           booking.id === selectedBooking.id 
             ? { ...booking, status: 'cancelled' } 
             : booking
-        ));
-      } else {
-        setSnackbar({
-          open: true,
-          message: data.message || 'Failed to cancel appointment',
-          severity: 'error'
-        });
-      }
+        )
+      );
+      
+      setSnackbar({
+        open: true,
+        message: 'Appointment cancelled successfully',
+        severity: 'success'
+      });
     } catch (err) {
       console.error('Error cancelling appointment:', err);
       setSnackbar({
         open: true,
-        message: 'Failed to connect to the server. Please try again later.',
+        message: 'Failed to cancel appointment. Please try again.',
         severity: 'error'
       });
     } finally {
@@ -124,106 +163,111 @@ const Bookings = () => {
     }
   };
 
-  const handleCancelDialogClose = () => {
-    setCancelDialogOpen(false);
-    setSelectedBooking(null);
-  };
-
   const handleSnackbarClose = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
+  const getStatusChip = (status) => {
+    let color = 'default';
+    let label = status;
+    
+    switch (status?.toLowerCase()) {
       case 'confirmed':
-        return 'success.main';
+        color = 'success';
+        label = 'Confirmed';
+        break;
       case 'pending':
-        return 'warning.main';
+        color = 'warning';
+        label = 'Pending';
+        break;
       case 'cancelled':
-        return 'error.main';
+        color = 'error';
+        label = 'Cancelled';
+        break;
       default:
-        return 'text.primary';
+        color = 'default';
+        label = status || 'Unknown';
     }
+    
+    return (
+      <Chip 
+        label={label} 
+        color={color} 
+        size="small" 
+        variant="outlined"
+      />
+    );
   };
 
-  if (!currentUser) {
-    return (
-      <Container maxWidth="md" sx={{ py: 8 }}>
-        <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
-          <Typography variant="h4" gutterBottom sx={{ color: 'primary.main', fontWeight: 600 }}>
-            My Bookings
-          </Typography>
-          <Alert severity="info" sx={{ mt: 3 }}>
-            Please sign in to view your bookings.
-          </Alert>
-        </Paper>
-      </Container>
-    );
-  }
-
   return (
-    <Container maxWidth="md" sx={{ py: 8 }}>
-      <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
-        <Typography variant="h4" gutterBottom sx={{ color: 'primary.main', fontWeight: 600 }}>
-          My Bookings
-        </Typography>
-        
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-          <Button 
-            variant="contained" 
-            color="primary" 
-            onClick={fetchBookings}
-            startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
-            disabled={loading}
-          >
-            Refresh Bookings
-          </Button>
-        </Box>
-        
+    <Container maxWidth="md" sx={{ py: 4 }}>
+      <Typography variant="h4" component="h1" gutterBottom>
+        My Bookings
+      </Typography>
+      
+      {isDemoMode && (
+        <Alert severity="info" sx={{ mb: 3 }}>
+          <Typography variant="body2">
+            <strong>Demo Mode:</strong> You're viewing sample bookings data.
+          </Typography>
+        </Alert>
+      )}
+      
+      <Paper sx={{ p: 3, mb: 4 }}>
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
             <CircularProgress />
           </Box>
         ) : error ? (
-          <Alert severity="error" sx={{ mt: 3 }}>
-            {error}
-          </Alert>
+          <Alert severity="error">{error}</Alert>
         ) : bookings.length === 0 ? (
-          <Alert severity="info" sx={{ mt: 3 }}>
-            You don't have any bookings yet.
+          <Alert severity="info">
+            You don't have any bookings yet. 
+            <Button 
+              component="a" 
+              href="/booking" 
+              sx={{ ml: 2 }}
+              variant="outlined"
+              size="small"
+            >
+              Book Now
+            </Button>
           </Alert>
         ) : (
-          <TableContainer component={Paper} sx={{ mt: 4 }}>
+          <TableContainer>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Service</TableCell>
-                  <TableCell>Date</TableCell>
-                  <TableCell>Time</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Actions</TableCell>
+                  <TableCell><Typography variant="subtitle2">Service</Typography></TableCell>
+                  <TableCell><Typography variant="subtitle2">Date</Typography></TableCell>
+                  <TableCell><Typography variant="subtitle2">Time</Typography></TableCell>
+                  <TableCell><Typography variant="subtitle2">Status</Typography></TableCell>
+                  <TableCell><Typography variant="subtitle2">Actions</Typography></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {bookings.map((booking) => (
                   <TableRow key={booking.id}>
                     <TableCell>
-                      <ServiceInfoTooltip serviceTitle={booking.serviceName || 'Unknown Service'}>
-                        {booking.serviceName || 'Unknown Service'}
-                      </ServiceInfoTooltip>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {booking.service || 'Unknown Service'}
+                        </Typography>
+                        {booking.service && booking.service !== 'Unknown Service' && (
+                          <ServiceInfoTooltip service={booking.service} />
+                        )}
+                      </Box>
                     </TableCell>
-                    <TableCell>{booking.appointmentDate ? formatDate(booking.appointmentDate) : 'Invalid Date'}</TableCell>
-                    <TableCell>{booking.appointmentTime || 'Not specified'}</TableCell>
+                    <TableCell>{formatDate(booking.date)}</TableCell>
+                    <TableCell>{booking.time || 'N/A'}</TableCell>
                     <TableCell>
-                      <Typography sx={{ color: getStatusColor(booking.status), fontWeight: 500 }}>
-                        {booking.status ? booking.status.charAt(0).toUpperCase() + booking.status.slice(1) : 'Unknown'}
-                      </Typography>
+                      {getStatusChip(booking.status)}
                     </TableCell>
                     <TableCell>
-                      {booking.status !== 'cancelled' && (
-                        <Button 
-                          variant="outlined" 
-                          color="error" 
+                      {booking.status?.toLowerCase() !== 'cancelled' && (
+                        <Button
+                          variant="outlined"
+                          color="error"
                           size="small"
                           onClick={() => handleCancelClick(booking)}
                         >
@@ -252,28 +296,28 @@ const Bookings = () => {
           {selectedBooking && (
             <Box sx={{ mt: 2 }}>
               <Typography variant="body2">
-                <strong>Service:</strong> {selectedBooking.serviceName || 'Unknown Service'}
+                <strong>Service:</strong> {selectedBooking.service || 'Unknown Service'}
               </Typography>
               <Typography variant="body2">
-                <strong>Date:</strong> {selectedBooking.appointmentDate ? formatDate(selectedBooking.appointmentDate) : 'Invalid Date'}
+                <strong>Date:</strong> {formatDate(selectedBooking.date)}
               </Typography>
               <Typography variant="body2">
-                <strong>Time:</strong> {selectedBooking.appointmentTime || 'Not specified'}
+                <strong>Time:</strong> {selectedBooking.time || 'N/A'}
               </Typography>
             </Box>
           )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelDialogClose} disabled={cancelLoading}>
-            No, Keep It
+            Keep Appointment
           </Button>
           <Button 
             onClick={handleCancelConfirm} 
             color="error" 
             disabled={cancelLoading}
-            startIcon={cancelLoading ? <CircularProgress size={20} /> : null}
+            variant="contained"
           >
-            Yes, Cancel Appointment
+            {cancelLoading ? 'Cancelling...' : 'Yes, Cancel'}
           </Button>
         </DialogActions>
       </Dialog>
@@ -284,7 +328,15 @@ const Bookings = () => {
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
         message={snackbar.message}
-      />
+      >
+        <Alert 
+          onClose={handleSnackbarClose} 
+          severity={snackbar.severity} 
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

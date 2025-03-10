@@ -4,6 +4,10 @@
 
 import { API_URL } from './config.js';
 import { getAllAppointments } from './appointmentApi.js';
+import { getUserAppointmentsFromUser } from './auth.js';
+
+// Flag to indicate if we're in demo mode (no server)
+let isDemoMode = false;
 
 /**
  * Get user's appointments
@@ -12,62 +16,46 @@ import { getAllAppointments } from './appointmentApi.js';
  */
 export const getUserAppointments = async (userId) => {
   try {
-    console.log(`Fetching appointments for user ${userId} from ${API_URL}/users/${userId}/appointments`);
+    // If we already know we're in demo mode, skip server request
+    if (isDemoMode) {
+      console.log('Using local storage for appointments (demo mode)');
+      return getLocalAppointments(userId);
+    }
     
-    // Try to fetch from server
+    console.log(`Fetching appointments for user ${userId}`);
+    
+    // Try to fetch from server using the new UsersController endpoint
     let serverAppointments = [];
     let serverError = null;
     
     try {
-      const response = await fetch(`${API_URL}/users/${userId}/appointments`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        credentials: 'include' // Include cookies for authentication
-      });
+      // Use the new function from auth.js that calls the UsersController endpoint
+      const data = await getUserAppointmentsFromUser(userId);
       
-      console.log('Appointments response status:', response.status);
-      
-      // Try to parse the response as JSON
-      if (response.ok) {
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const data = await response.json();
-          console.log('Appointments response data:', data);
-          serverAppointments = data.appointments || data || [];
-        } else {
-          const text = await response.text();
-          console.log('Appointments response text:', text);
-          serverError = 'Invalid response format';
-        }
+      // Check if the response contains appointments
+      if (data && (data.appointments || Array.isArray(data))) {
+        serverAppointments = data.appointments || data;
+        console.log('Received appointments from server:', serverAppointments);
+        
+        return {
+          success: true,
+          appointments: serverAppointments
+        };
       } else {
-        serverError = `Failed to fetch appointments (Status: ${response.status})`;
+        serverError = 'No appointments data found in response';
         console.warn(serverError);
       }
     } catch (err) {
       console.error('Server request failed:', err);
       serverError = err.message;
+      
+      // If we get a 404 or other error, set demo mode flag for future requests
+      isDemoMode = true;
     }
     
     // If server request failed or returned no appointments, use local storage for demo purposes
     if (serverError || serverAppointments.length === 0) {
-      console.log('Using local storage for appointments (demo mode)');
-      
-      // Get all appointments from local storage
-      const allAppointments = getAllAppointments();
-      
-      // Filter appointments for the current user
-      const userAppointments = allAppointments.filter(
-        appointment => appointment.userId === userId || appointment.userId === undefined
-      );
-      
-      return {
-        success: true,
-        appointments: userAppointments,
-        message: serverError ? `Using local data (${serverError})` : 'Using local data (no server appointments found)'
-      };
+      return getLocalAppointments(userId, serverError);
     }
     
     return {
@@ -80,20 +68,35 @@ export const getUserAppointments = async (userId) => {
     // Fallback to local storage for demo purposes
     console.log('Error occurred, falling back to local storage for demo purposes');
     
-    // Get all appointments from local storage
-    const allAppointments = getAllAppointments();
+    // Set demo mode flag for future requests
+    isDemoMode = true;
     
-    // Filter appointments for the current user
-    const userAppointments = allAppointments.filter(
-      appointment => appointment.userId === userId || appointment.userId === undefined
-    );
-    
-    return {
-      success: true,
-      appointments: userAppointments,
-      message: 'Using local data due to error'
-    };
+    return getLocalAppointments(userId, error.message);
   }
+};
+
+/**
+ * Get appointments from local storage (for demo mode)
+ * @param {number} userId - User ID
+ * @param {string} errorMessage - Optional error message to include
+ * @returns {Object} - Response with appointments data from local storage
+ */
+const getLocalAppointments = (userId, errorMessage = null) => {
+  // Get all appointments from local storage
+  const allAppointments = getAllAppointments();
+  
+  // Filter appointments for the current user
+  const userAppointments = allAppointments.filter(
+    appointment => appointment.userId === userId || appointment.userId === undefined
+  );
+  
+  return {
+    success: true,
+    appointments: userAppointments,
+    message: errorMessage 
+      ? `Using local data (${errorMessage})` 
+      : 'Using local data (demo mode)'
+  };
 };
 
 /**
@@ -105,6 +108,11 @@ export const getUserAppointments = async (userId) => {
 export const cancelAppointment = async (appointmentId, userId) => {
   try {
     console.log(`Cancelling appointment ${appointmentId} for user ${userId}`);
+    
+    // If we're in demo mode, skip server request
+    if (isDemoMode) {
+      return cancelLocalAppointment(appointmentId);
+    }
     
     // Try to cancel on server
     let serverSuccess = false;
@@ -141,28 +149,21 @@ export const cancelAppointment = async (appointmentId, userId) => {
       } else {
         serverError = `Failed to cancel appointment (Status: ${response.status})`;
         console.warn(serverError);
+        
+        // If we get a 404, set demo mode flag for future requests
+        if (response.status === 404) {
+          isDemoMode = true;
+        }
       }
     } catch (err) {
       console.error('Server request failed:', err);
       serverError = err.message;
+      // Set demo mode flag for future requests
+      isDemoMode = true;
     }
     
-    // For demo purposes, also update local storage
-    try {
-      // Get all appointments
-      const allAppointments = getAllAppointments();
-      
-      // Find and update the appointment
-      const appointmentIndex = allAppointments.findIndex(a => a.id === appointmentId);
-      
-      if (appointmentIndex !== -1) {
-        allAppointments[appointmentIndex].status = 'cancelled';
-        localStorage.setItem('rr_tax_appointments', JSON.stringify(allAppointments));
-        console.log('Updated appointment in local storage');
-      }
-    } catch (err) {
-      console.error('Error updating local storage:', err);
-    }
+    // Update local storage regardless of server response
+    const localResult = cancelLocalAppointment(appointmentId);
     
     return {
       success: true,
@@ -173,6 +174,43 @@ export const cancelAppointment = async (appointmentId, userId) => {
     };
   } catch (error) {
     console.error('Cancel appointment error:', error);
-    throw error;
+    
+    // Set demo mode flag for future requests
+    isDemoMode = true;
+    
+    // Try to cancel locally anyway
+    cancelLocalAppointment(appointmentId);
+    
+    return {
+      success: true,
+      message: 'Appointment cancelled locally (demo mode)',
+      serverSuccess: false
+    };
   }
+};
+
+/**
+ * Cancel an appointment in local storage (for demo mode)
+ * @param {number} appointmentId - Appointment ID to cancel
+ * @returns {Object} - Result of the operation
+ */
+const cancelLocalAppointment = (appointmentId) => {
+  // Get all appointments
+  const allAppointments = getAllAppointments();
+  
+  // Find the appointment to cancel
+  const updatedAppointments = allAppointments.map(appointment => {
+    if (appointment.id === appointmentId) {
+      return { ...appointment, status: 'cancelled' };
+    }
+    return appointment;
+  });
+  
+  // Save the updated appointments
+  localStorage.setItem('rr_tax_appointments', JSON.stringify(updatedAppointments));
+  
+  return {
+    success: true,
+    message: 'Appointment cancelled in local storage'
+  };
 };
