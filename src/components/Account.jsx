@@ -94,14 +94,21 @@ const Account = () => {
     setSuccess('');
     
     try {
-      await login({
+      console.log('Attempting to log in with:', {
+        email: formData.email,
+        password: formData.password ? '********' : 'empty'
+      });
+      
+      const result = await login({
         email: formData.email,
         password: formData.password
       });
+      
+      console.log('Login result:', result);
       setSuccess('Login successful!');
     } catch (err) {
       // Error is handled by the auth context
-      console.error('Login error:', err);
+      console.error('Login error in Account component:', err);
     }
   };
 

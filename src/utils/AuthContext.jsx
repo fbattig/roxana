@@ -55,9 +55,20 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
+      console.log('AuthContext: Attempting login with credentials', {
+        email: credentials.email,
+        password: credentials.password ? '********' : 'empty'
+      });
+      
       const response = await loginUser(credentials);
-      setCurrentUser(response.user);
-      return response;
+      console.log('AuthContext: Login response', response);
+      
+      if (response.user) {
+        setCurrentUser(response.user);
+        return response;
+      } else {
+        throw new Error('Login successful but no user data returned');
+      }
     } catch (err) {
       setError(err.message);
       throw err;

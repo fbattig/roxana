@@ -53,6 +53,11 @@ const Bookings = () => {
       if (data.success) {
         setBookings(data.appointments);
         console.log('Bookings set:', data.appointments.length);
+        
+        // If there's a message about using local data, show it as a warning
+        if (data.message && data.message.includes('local data')) {
+          setError(data.message);
+        }
       } else {
         setError(data.message || 'Failed to fetch bookings');
         console.error('Failed to fetch bookings:', data.message);
@@ -89,8 +94,8 @@ const Bookings = () => {
       if (data.success) {
         setSnackbar({
           open: true,
-          message: 'Appointment cancelled successfully',
-          severity: 'success'
+          message: data.message || 'Appointment cancelled successfully',
+          severity: data.serverSuccess === false ? 'warning' : 'success'
         });
         
         // Update the booking status in the list

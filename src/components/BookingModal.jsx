@@ -169,7 +169,15 @@ const BookingModal = ({ open, onClose, service }) => {
     setLoading(true);
     
     // Get the current user from auth context
-    const user = currentUser || { id: 1 }; // Fallback to a default ID if not logged in
+    if (!currentUser) {
+      setSnackbar({
+        open: true,
+        message: 'You must be logged in to book an appointment',
+        severity: 'error'
+      });
+      setLoading(false);
+      return;
+    }
     
     // Create a date string that's not affected by timezone
     const year = selectedDate.getFullYear();
@@ -178,7 +186,6 @@ const BookingModal = ({ open, onClose, service }) => {
     const formattedDate = `${year}-${month}-${day}`;
     
     const appointmentData = {
-      userId: user.id,
       serviceId: service.id,
       appointmentDate: formattedDate,
       appointmentTime: selectedTime,
@@ -187,18 +194,32 @@ const BookingModal = ({ open, onClose, service }) => {
     
     console.log('Sending appointment data:', appointmentData);
     
-    createAppointment(appointmentData).then(() => {
-      setLoading(false);
-      setSnackbar({
-        open: true,
-        message: 'Appointment booked successfully!',
-        severity: 'success'
+    createAppointment(appointmentData)
+      .then((response) => {
+        console.log('Appointment creation response:', response);
+        setLoading(false);
+        
+        // Always show success since we're saving locally for demo purposes
+        setSnackbar({
+          open: true,
+          message: response.message || 'Appointment booked successfully!',
+          severity: response.serverSuccess === false ? 'warning' : 'success'
+        });
+        
+        // Reset form and close modal after a delay
+        setTimeout(() => {
+          handleCloseModal();
+        }, 2000);
+      })
+      .catch((error) => {
+        console.error('Error creating appointment:', error);
+        setLoading(false);
+        setSnackbar({
+          open: true,
+          message: error.message || 'Failed to book appointment. Please try again.',
+          severity: 'error'
+        });
       });
-      // Reset form and close modal after a delay
-      setTimeout(() => {
-        handleCloseModal();
-      }, 2000);
-    });
   };
 
   // Handle modal close
