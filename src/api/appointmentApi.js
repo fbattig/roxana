@@ -99,7 +99,8 @@ export const createAppointment = async (appointmentData) => {
     // Format the data for the API
     const formattedData = {
       UserId: currentUser.id,
-      ServiceId: parseInt(appointmentData.serviceId, 10) || 1, // Convert to integer, default to 1 if invalid
+      ServiceId: parseInt(appointmentData.serviceId, 10) || 1,
+      ServiceTitle: appointmentData.serviceTitle,
       AppointmentDate: appointmentData.appointmentDate,
       AppointmentTime: appointmentData.appointmentTime,
       Notes: appointmentData.notes || '',

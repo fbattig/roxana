@@ -19,11 +19,14 @@ import {
   DialogContentText,
   DialogTitle,
   Snackbar,
-  Chip
+  Chip,
+  Modal,
+  Fade
 } from '@mui/material';
 import { useAuth } from '../utils/AuthContext';
 import { getUserAppointments, cancelAppointment } from '../api/bookings';
-import ServiceInfoTooltip from './ServiceInfoTooltip';
+import { markdownMap } from '../utils/markdownUtils';
+import ReactMarkdown from 'react-markdown';
 
 const formatDate = (dateString) => {
   if (!dateString) return 'Invalid Date';
@@ -78,6 +81,7 @@ const Bookings = () => {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [cancelLoading, setCancelLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [markdownModal, setMarkdownModal] = useState({ open: false, title: '', content: '' });
 
   const fetchBookings = async () => {
     if (!currentUser || !currentUser.id) return;
@@ -167,6 +171,19 @@ const Bookings = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
+  const handleServiceClick = (serviceName) => {
+    const content = markdownMap[serviceName] || '*No requirements information available for this service.*';
+    setMarkdownModal({
+      open: true,
+      title: serviceName,
+      content: content
+    });
+  };
+
+  const handleMarkdownModalClose = () => {
+    setMarkdownModal({ open: false, title: '', content: '' });
+  };
+
   const getStatusChip = (status) => {
     let color = 'default';
     let label = status;
@@ -250,12 +267,20 @@ const Bookings = () => {
                   <TableRow key={booking.id || `booking-${booking.service}-${booking.date}-${booking.time}-${index}`}>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ 
+                            fontWeight: 500,
+                            cursor: 'pointer',
+                            '&:hover': {
+                              color: 'primary.main',
+                              textDecoration: 'underline'
+                            }
+                          }}
+                          onClick={() => handleServiceClick(booking.service)}
+                        >
                           {booking.service || 'Unknown Service'}
                         </Typography>
-                        {booking.service && booking.service !== 'Unknown Service' && (
-                          <ServiceInfoTooltip service={booking.service} />
-                        )}
                       </Box>
                     </TableCell>
                     <TableCell>{formatDate(booking.date)}</TableCell>
@@ -321,6 +346,58 @@ const Bookings = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Markdown Modal */}
+      <Modal
+        open={markdownModal.open}
+        onClose={handleMarkdownModalClose}
+        closeAfterTransition
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          p: 2
+        }}
+      >
+        <Fade in={markdownModal.open}>
+          <Box
+            sx={{
+              backgroundColor: 'white',
+              borderRadius: 2,
+              boxShadow: 24,
+              p: 4,
+              maxWidth: '800px',
+              maxHeight: '90vh',
+              width: '100%',
+              overflow: 'auto',
+              position: 'relative'
+            }}
+          >
+            <Typography variant="h6" component="h3" sx={{ mb: 2, textAlign: 'center' }}>
+              {markdownModal.title}
+            </Typography>
+            <Box sx={{ 
+              p: 2, 
+              backgroundColor: '#f9f9f9', 
+              borderRadius: 1,
+              border: '1px solid #eee',
+              maxHeight: 'calc(70vh - 100px)',
+              overflow: 'auto'
+            }}>
+              <ReactMarkdown>{markdownModal.content}</ReactMarkdown>
+            </Box>
+            <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleMarkdownModalClose}
+              >
+                Close
+              </Button>
+            </Box>
+          </Box>
+        </Fade>
+      </Modal>
 
       {/* Snackbar for notifications */}
       <Snackbar

@@ -30,7 +30,13 @@ const MarkdownPopup = ({ open, onClose, markdownFile, title }) => {
       fetchMarkdownContent(markdownFile)
         .then(text => {
           console.log(`MarkdownPopup: Successfully loaded file: ${markdownFile} (${text.length} characters)`);
-          setContent(text);
+          // Filter out any HTML-like content from the markdown before converting
+          const cleanedMarkdown = text
+            .replace(/<script.*?>.*?<\/script>/gs, '')
+            .replace(/<meta.*?>/g, '')
+            .replace(/<link.*?>/g, '')
+            .replace(/<title>.*?<\/title>/g, '');
+          setContent(cleanedMarkdown);
           setLoading(false);
         })
         .catch(err => {

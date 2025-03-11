@@ -187,6 +187,7 @@ const BookingModal = ({ open, onClose, service }) => {
     
     const appointmentData = {
       serviceId: service.id,
+      serviceTitle: service.title,
       appointmentDate: formattedDate,
       appointmentTime: selectedTime,
       notes: formData.message || ''
