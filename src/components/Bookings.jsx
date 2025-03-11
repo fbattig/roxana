@@ -246,8 +246,8 @@ const Bookings = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {bookings.map((booking) => (
-                  <TableRow key={booking.id}>
+                {bookings.map((booking, index) => (
+                  <TableRow key={booking.id || `booking-${booking.service}-${booking.date}-${booking.time}-${index}`}>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Typography variant="body2" sx={{ fontWeight: 500 }}>
