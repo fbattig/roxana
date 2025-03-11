@@ -70,23 +70,24 @@ const ServiceInfoTooltip = ({ service, serviceTitle, children }) => {
   const TooltipContent = () => (
     <Paper sx={{ p: 1.5, maxWidth: 220 }}>
       <Typography variant="body2" gutterBottom>
-        Additional information is available for this service.
+        Click to view service requirements and information
       </Typography>
       <Button 
         size="small" 
         variant="outlined" 
         onClick={handlePopupOpen}
         fullWidth
+        color="primary"
       >
-        View Details
+        View Requirements
       </Button>
     </Paper>
   );
   
   return (
-    <>
+    <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', ml: 1 }}>
       {/* Render children if provided */}
-      {children || <span>{title}</span>}
+      {children}
       
       {/* Info icon with tooltip */}
       <Tooltip
@@ -116,7 +117,7 @@ const ServiceInfoTooltip = ({ service, serviceTitle, children }) => {
           size="small" 
           color="primary"
           onClick={handleTooltipOpen}
-          sx={{ ml: 0.5, p: 0.5 }}
+          sx={{ p: 0.5 }}
         >
           <InfoIcon fontSize="small" />
         </IconButton>
@@ -126,10 +127,10 @@ const ServiceInfoTooltip = ({ service, serviceTitle, children }) => {
       <MarkdownPopup
         open={popupOpen}
         onClose={handlePopupClose}
-        title={`${title} Information`}
+        title={`${title} Requirements`}
         markdownFile={markdownFile}
       />
-    </>
+    </Box>
   );
 };
 

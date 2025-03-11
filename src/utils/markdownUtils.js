@@ -1,3 +1,6 @@
+import { marked } from 'marked';
+
+
 /**
  * Utility functions for handling markdown files
  */
@@ -7,10 +10,23 @@
  * @param {string} filename - The name of the markdown file to fetch
  * @returns {Promise<string>} - The markdown content
  */
+// export const fetchMarkdownContent = async (filename) => {
+//   try {
+//     // Use the correct path to markdown files in src/assets/images/documents
+//     const response = await fetch(`/assets/images/documents/${filename}`);
+//     if (!response.ok) {
+//       throw new Error(`Failed to fetch markdown content: ${response.statusText}`);
+//     }
+//     return await response.text();
+//   } catch (error) {
+//     console.error('Error fetching markdown content:', error);
+//     throw error;
+//   }
+// };
 export const fetchMarkdownContent = async (filename) => {
   try {
-    // Use the correct path to markdown files in src/assets/images/documents
-    const response = await fetch(`/assets/images/documents/${filename}`);
+    // Use the correct path to markdown files in src/assets/docs
+    const response = await fetch(`/assets/docs/${filename}`); // Change the path
     if (!response.ok) {
       throw new Error(`Failed to fetch markdown content: ${response.statusText}`);
     }
@@ -73,6 +89,10 @@ export const getMarkdownFileForService = (serviceTitle, language = 'en') => {
     'Tax Planning': {
       en: 'Financial_Planning_en.MD',
       es: 'Financial_Planning_es.MD'
+    },
+    'Tax Slips Preparation and Filing': {
+      en: 'Tax Slips Preparation and Filing.MD',
+      es: 'Tax Slips Preparation and Filing.MD'
     }
   };
 
@@ -84,4 +104,12 @@ export const getMarkdownFileForService = (serviceTitle, language = 'en') => {
 
   // Return the appropriate language version
   return serviceMap[serviceTitle][language] || serviceMap[serviceTitle]['en'];
+};
+/**
+* Convert markdown text to HTML
+* @param {string} markdown - The markdown content
+* @returns {string} - The HTML content
+*/
+export const convertMarkdownToHtml = (markdown) => {
+  return marked(markdown);
 };
