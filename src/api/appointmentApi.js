@@ -91,16 +91,37 @@ const saveAppointments = (appointments) => {
 // Create a new appointment
 export const createAppointment = async (appointmentData) => {
   try {
-    console.log(`Sending appointment to ${API_URL}/Appointments`);
+    console.log('Raw appointment data received:', appointmentData);
     
     // Get the current user
     const currentUser = getCurrentUser();
     
-    // Format the data for the API
+    // Detailed logging of service ID
+    console.log('Original serviceId:', appointmentData.serviceId);
+    
+    // Mapping service IDs to numeric values for backend
+    const serviceIdMap = {
+      'tax-planning': 1,
+      'financial-review': 2,
+      'business-advisory': 3,
+      'retirement-planning': 4,
+      'new-client': 5
+    };
+    
+    // Determine ServiceId with extensive logging
+    let mappedServiceId = serviceIdMap[appointmentData.serviceId];
+    console.log('Mapped ServiceId:', mappedServiceId);
+    
+    if (mappedServiceId === undefined) {
+      console.warn('Unknown service ID, using default');
+      mappedServiceId = 1; // Default to first service
+    }
+    
+    // Format the data for the API with additional logging
     const formattedData = {
       UserId: currentUser.id,
-      ServiceId: parseInt(appointmentData.serviceId, 10) || 1,
-      ServiceTitle: appointmentData.serviceTitle,
+      ServiceId: mappedServiceId,
+      ServiceTitle: appointmentData.serviceTitle || 'Unknown Service',
       AppointmentDate: appointmentData.appointmentDate,
       AppointmentTime: appointmentData.appointmentTime,
       Notes: appointmentData.notes || '',
@@ -164,11 +185,11 @@ export const createAppointment = async (appointmentData) => {
     saveAppointments(appointments);
 
     // Return success even if server failed, but include warning
-    return { 
+    return {
       appointment: newAppointment,
       success: true,
-      message: serverError 
-        ? `Warning: Server error (${serverError}), but appointment saved locally for demo purposes.` 
+      message: serverError
+        ? `Warning: Server error (${serverError}), but appointment saved locally for demo purposes.`
         : 'Appointment booked successfully!',
       serverSuccess: !serverError
     };
@@ -189,7 +210,7 @@ export const createAppointment = async (appointmentData) => {
     appointments.push(newAppointment);
     saveAppointments(appointments);
 
-    return { 
+    return {
       appointment: newAppointment,
       success: true,
       message: 'Appointment created in local storage (demo mode)',
