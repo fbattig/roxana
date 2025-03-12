@@ -32,21 +32,16 @@ const formatDate = (dateString) => {
   if (!dateString) return 'N/A';
   
   try {
-    // Extract just the date part if there's a time component
-    const datePart = dateString.split(' ')[0];
-    const date = new Date(datePart);
-    
+    const date = new Date(dateString);
     if (isNaN(date.getTime())) {
-      // If conversion fails, return just the date part or the original string
-      return datePart || dateString;
+      return dateString;
     }
     
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return date.toLocaleDateString(undefined, options);
   } catch (error) {
     console.error('Error formatting date:', error);
-    // On error, return just the date part if possible
-    return dateString.split(' ')[0] || dateString;
+    return dateString;
   }
 };
 
@@ -102,7 +97,7 @@ const Bookings = () => {
         processedAppointments.push({
           id: 1,
           service: "Individual Income Tax Return",
-          date: "2025-03-12 00:00:00.000",
+          date: "2025-03-12",
           time: "4:00 PM",
           status: "pending",
           serviceId: 1
@@ -112,7 +107,7 @@ const Bookings = () => {
         processedAppointments.push({
           id: 2,
           service: "Individual Income Tax Return",
-          date: "2025-03-12 00:00:00.000",
+          date: "2025-03-12",
           time: "4:30 PM",
           status: "pending",
           serviceId: 1
