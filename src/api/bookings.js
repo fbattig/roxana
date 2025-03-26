@@ -7,7 +7,8 @@ import { getAllAppointments } from './appointmentApi.js';
 import { getUserAppointmentsFromUser } from './auth.js';
 
 // Flag to indicate if we're in demo mode (no server)
-let isDemoMode = false;
+// Set to true by default since the backend server is not available
+let isDemoMode = true;
 
 /**
  * Get user's appointments
@@ -49,8 +50,17 @@ export const getUserAppointments = async (userId) => {
       console.error('Server request failed:', err);
       serverError = err.message;
       
-      // If we get a 404 or other error, set demo mode flag for future requests
-      isDemoMode = true;
+      // If we get a connection error, timeout, or other network error, set demo mode flag for future requests
+      if (err.message === 'Server request timed out' || 
+          err.message === 'Server is unavailable' ||
+          err.message.includes('NetworkError') ||
+          err.message.includes('Failed to fetch') ||
+          err.message.includes('Network request failed') ||
+          err.name === 'TypeError' ||
+          err.name === 'AbortError') {
+        console.log('Network error detected, switching to demo mode');
+        isDemoMode = true;
+      }
     }
     
     // If server request failed or returned no appointments, use local storage for demo purposes

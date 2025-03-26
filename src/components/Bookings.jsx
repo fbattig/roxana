@@ -95,27 +95,21 @@ const Bookings = () => {
         const appointmentsArray = Array.isArray(data.appointments) ? data.appointments : data;
         console.log('Raw appointments:', appointmentsArray);
         
-        // Create directly from the raw data we see in the console
-        // Based on your image showing two appointments in the database
-        
-        // First appointment: Individual Income Tax Return at 4:00 PM
-        processedAppointments.push({
-          id: 1,
-          service: "Individual Income Tax Return",
-          date: "2025-03-12 00:00:00.000",
-          time: "4:00 PM",
-          status: "pending",
-          serviceId: 1
-        });
-        
-        // Second appointment: Individual Income Tax Return at 4:30 PM
-        processedAppointments.push({
-          id: 2,
-          service: "Individual Income Tax Return",
-          date: "2025-03-12 00:00:00.000",
-          time: "4:30 PM",
-          status: "pending",
-          serviceId: 1
+        // Process all appointments from the data
+        processedAppointments = appointmentsArray.map(appointment => {
+          // Ensure we have a proper service name
+          const serviceName = appointment.serviceName || 
+                             appointment.service || 
+                             getServiceNameFromId(appointment.serviceId);
+          
+          return {
+            id: appointment.id,
+            service: serviceName,
+            date: appointment.date || appointment.appointmentDate,
+            time: appointment.time || appointment.appointmentTime,
+            status: appointment.status || 'pending',
+            serviceId: appointment.serviceId
+          };
         });
         
         console.log('Processed appointments:', processedAppointments);
@@ -127,7 +121,7 @@ const Bookings = () => {
       setBookings(processedAppointments);
       
       // Check if we're in demo mode
-      setIsDemoMode(data.isDemoMode || data.message?.includes('demo') || false);
+      setIsDemoMode(data.message?.includes('demo') || false);
       
     } catch (err) {
       console.error('Error fetching bookings:', err);

@@ -12,7 +12,22 @@ export default defineConfig({
         target: 'https://localhost:7082',
         changeOrigin: true,
         secure: false, // Needed for self-signed certificates
-        rewrite: (path) => path
+        rewrite: (path) => path,
+        configure: (proxy, options) => {
+          // Add error handling to proxy
+          proxy.on('error', (err, req, res) => {
+            console.log('Proxy error:', err);
+            // Return a 503 Service Unavailable
+            res.writeHead(503, {
+              'Content-Type': 'application/json',
+            });
+            res.end(JSON.stringify({ 
+              error: 'Service unavailable', 
+              message: 'Backend server is not running' 
+            }));
+          });
+        },
+        timeout: 2000 // Reduce timeout to 2 seconds
       }
     },
     port: 5173,

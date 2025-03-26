@@ -207,90 +207,57 @@ export const getUserAppointmentsFromUser = async (userId) => {
   try {
     console.log(`Fetching appointments for user ${userId} from ${API_URL}/users/${userId}/appointments`);
     
-    const response = await fetch(`${API_URL}/users/${userId}/appointments`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      credentials: 'include' // Include cookies for authentication
-    });
+    // Add a timeout to the fetch request to avoid long waiting times
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
     
-    console.log('Appointments response status:', response.status);
-    
-    // Try to parse the response as JSON
-    let data;
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      data = await response.json();
-      console.log('Appointments response data:', data);
+    try {
+      const response = await fetch(`${API_URL}/users/${userId}/appointments`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'include', // Include cookies for authentication
+        signal: controller.signal // Add abort signal for timeout
+      });
       
-      // Process the data to ensure it's in the expected format
-      if (data && Array.isArray(data)) {
-        // If the response is an array, it's likely the appointments array directly
-        // Process each appointment to extract service information
-        const processedAppointments = data.map(appointment => {
-          // If service is an object, extract the name/title
-          if (appointment.service && typeof appointment.service === 'object') {
-            return {
-              ...appointment,
-              serviceName: appointment.service.title || appointment.service.name || 'Unknown Service',
-              serviceId: appointment.service.id
-            };
-          }
-          return appointment;
-        });
+      // Clear the timeout since the request completed
+      clearTimeout(timeoutId);
+      
+      console.log('Appointments response status:', response.status);
+      
+      // Try to parse the response as JSON
+      let data;
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+        console.log('Appointments response data:', data);
         
-        return {
-          success: true,
-          appointments: processedAppointments
-        };
-      } else if (data && data.appointments && Array.isArray(data.appointments)) {
-        // If the response has an appointments property that's an array
-        // Process each appointment to extract service information
-        const processedAppointments = data.appointments.map(appointment => {
-          // If service is an object, extract the name/title
-          if (appointment.service && typeof appointment.service === 'object') {
-            return {
-              ...appointment,
-              serviceName: appointment.service.title || appointment.service.name || 'Unknown Service',
-              serviceId: appointment.service.id
-            };
-          }
-          return appointment;
-        });
-        
-        return {
-          success: true,
-          appointments: processedAppointments,
-          message: data.message
-        };
-      } else if (data && data.data && Array.isArray(data.data)) {
-        // Some APIs nest the data under a 'data' property
-        // Process each appointment to extract service information
-        const processedAppointments = data.data.map(appointment => {
-          // If service is an object, extract the name/title
-          if (appointment.service && typeof appointment.service === 'object') {
-            return {
-              ...appointment,
-              serviceName: appointment.service.title || appointment.service.name || 'Unknown Service',
-              serviceId: appointment.service.id
-            };
-          }
-          return appointment;
-        });
-        
-        return {
-          success: true,
-          appointments: processedAppointments,
-          message: data.message
-        };
-      } else if (data && typeof data === 'object') {
-        // If it's an object but not in the expected format, try to extract appointments
-        const possibleAppointments = Object.values(data).find(val => Array.isArray(val));
-        if (possibleAppointments) {
+        // Process the data to ensure it's in the expected format
+        if (data && Array.isArray(data)) {
+          // If the response is an array, it's likely the appointments array directly
           // Process each appointment to extract service information
-          const processedAppointments = possibleAppointments.map(appointment => {
+          const processedAppointments = data.map(appointment => {
+            // If service is an object, extract the name/title
+            if (appointment.service && typeof appointment.service === 'object') {
+              return {
+                ...appointment,
+                serviceName: appointment.service.title || appointment.service.name || 'Unknown Service',
+                serviceId: appointment.service.id
+              };
+            }
+            return appointment;
+          });
+          
+          return {
+            success: true,
+            appointments: processedAppointments
+          };
+        } else if (data && data.appointments && Array.isArray(data.appointments)) {
+          // If the response has an appointments property that's an array
+          // Process each appointment to extract service information
+          const processedAppointments = data.appointments.map(appointment => {
             // If service is an object, extract the name/title
             if (appointment.service && typeof appointment.service === 'object') {
               return {
@@ -305,26 +272,86 @@ export const getUserAppointmentsFromUser = async (userId) => {
           return {
             success: true,
             appointments: processedAppointments,
-            message: 'Appointments extracted from response'
+            message: data.message
           };
+        } else if (data && data.data && Array.isArray(data.data)) {
+          // Some APIs nest the data under a 'data' property
+          // Process each appointment to extract service information
+          const processedAppointments = data.data.map(appointment => {
+            // If service is an object, extract the name/title
+            if (appointment.service && typeof appointment.service === 'object') {
+              return {
+                ...appointment,
+                serviceName: appointment.service.title || appointment.service.name || 'Unknown Service',
+                serviceId: appointment.service.id
+              };
+            }
+            return appointment;
+          });
+          
+          return {
+            success: true,
+            appointments: processedAppointments,
+            message: data.message
+          };
+        } else if (data && typeof data === 'object') {
+          // If it's an object but not in the expected format, try to extract appointments
+          const possibleAppointments = Object.values(data).find(val => Array.isArray(val));
+          if (possibleAppointments) {
+            // Process each appointment to extract service information
+            const processedAppointments = possibleAppointments.map(appointment => {
+              // If service is an object, extract the name/title
+              if (appointment.service && typeof appointment.service === 'object') {
+                return {
+                  ...appointment,
+                  serviceName: appointment.service.title || appointment.service.name || 'Unknown Service',
+                  serviceId: appointment.service.id
+                };
+              }
+              return appointment;
+            });
+            
+            return {
+              success: true,
+              appointments: processedAppointments,
+              message: 'Appointments extracted from response'
+            };
+          }
         }
+        
+        // If we couldn't identify the appointments array, return the data as is
+        return data;
+      } else {
+        const text = await response.text();
+        console.log('Appointments response text:', text);
+        throw new Error('Invalid response format');
       }
       
-      // If we couldn't identify the appointments array, return the data as is
-      return data;
-    } else {
-      const text = await response.text();
-      console.log('Appointments response text:', text);
-      throw new Error('Invalid response format');
+      if (!response.ok) {
+        throw new Error(data.error || data.message || `Failed to fetch appointments (Status: ${response.status})`);
+      }
+    } catch (fetchError) {
+      // Clear the timeout if it's still active
+      clearTimeout(timeoutId);
+      
+      // Rethrow the error to be caught by the outer try-catch
+      throw fetchError;
     }
-    
-    if (!response.ok) {
-      throw new Error(data.error || data.message || `Failed to fetch appointments (Status: ${response.status})`);
-    }
-    
-    return data;
   } catch (error) {
     console.error('Fetch appointments error:', error);
+    
+    // Check if it's a timeout or connection error
+    if (error.name === 'AbortError') {
+      console.log('Request timed out, server may be unavailable');
+      error.message = 'Server request timed out';
+    } else if (error.message && error.message.includes('NetworkError') || 
+               error.message.includes('Failed to fetch') ||
+               error.message.includes('Network request failed') ||
+               error.name === 'TypeError') {
+      console.log('Network error, server may be unavailable');
+      error.message = 'Server is unavailable';
+    }
+    
     throw error;
   }
 };
